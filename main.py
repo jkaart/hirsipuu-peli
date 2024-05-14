@@ -68,10 +68,18 @@ class Hirsipuu:
 
 naytto.fill((50, 50, 50))
 
+# Aloitusnäyttö
 teksti = fontti.render("HIRSIPUU", True, (255, 255, 255))
 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
+teksti2 = fontti.render("F1 - Uusi peli", True, (255, 255, 255))    # F1 - Uusi peli
+naytto.blit(teksti2, (leveys // 2 - teksti2.get_width() // 2, 100)) 
+teksti3 = fontti.render("F2 - Lisää pelaaja", True, (255, 255, 255)) # F2 - Lisää pelaaja
+naytto.blit(teksti3, (leveys // 2 - teksti3.get_width() // 2, 150))
+teksti4 = fontti.render("ESC - Lopeta", True, (255, 255, 255))       # ESC - Lopeta
+naytto.blit(teksti4, (leveys // 2 - teksti4.get_width() // 2, 200))
 
 pygame.display.flip()
+pygame.time.delay(10)
 
 
 def pelaa():
@@ -82,17 +90,12 @@ def pelaa():
                     hirsipuu.uusi_peli()
                 if tapahtuma.key == pygame.K_F2:
                     hirsipuu.lisaa_pelaaja()
+                if tapahtuma.key == pygame.K_ESCAPE:
+                    return
                 if tapahtuma.type == pygame.QUIT:
                     return
 
         pygame.display.flip()
-
-        #Päivitetään näyttö
-        naytto.fill((50, 50, 50))
-        teksti = fontti.render("HIRSIPUU", True, (255, 255, 255))
-        naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
-        pygame.display.flip()
-        pygame.time.delay(10)
 
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
