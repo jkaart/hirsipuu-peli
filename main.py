@@ -7,7 +7,6 @@ pygame.init()
 leveys = 800
 korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
-pygame.display.set_caption("Hirsipuu")
 fontti = pygame.font.SysFont("Arial", 24)
 
 class Pelaaja:
@@ -36,14 +35,12 @@ class Hirsipuu:
         return " ".join(self.arvattava_sana)
 
     def uusi_peli(self):
-        pass
         self.oikea_vastaus = self.uusi_sana()
         self.arvattava_sana = list("_" * len(self.oikea_vastaus))
 
     def lisaa_pelaaja(self):
         nimi = input("Anna pelaajan nimi: ")
         pelaaja = Pelaaja(nimi)
-        #pelaaja.uusi_pelaaja()
         self.pelaajat.append(pelaaja)
 
     def uusi_sana(self):
@@ -65,28 +62,27 @@ class Hirsipuu:
         except ValueError:
             print("ei löytynyt")
 
-
-naytto.fill((50, 50, 50))
-
-# Aloitusnäyttö
-teksti = fontti.render("HIRSIPUU", True, (255, 255, 255))
-naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
-teksti2 = fontti.render("F1 - Uusi peli", True, (255, 255, 255))    # F1 - Uusi peli
-naytto.blit(teksti2, (leveys // 2 - teksti2.get_width() // 2, 100)) 
-teksti3 = fontti.render("F2 - Lisää pelaaja", True, (255, 255, 255)) # F2 - Lisää pelaaja
-naytto.blit(teksti3, (leveys // 2 - teksti3.get_width() // 2, 150))
-teksti4 = fontti.render("ESC - Lopeta", True, (255, 255, 255))       # ESC - Lopeta
-naytto.blit(teksti4, (leveys // 2 - teksti4.get_width() // 2, 200))
-
-pygame.display.flip()
-pygame.time.delay(10)
-
-
-def pelaa():
-    while True:
-        for tapahtuma in pygame.event.get():
-            if tapahtuma.type == pygame.KEYDOWN:
-                if tapahtuma.key == pygame.K_F1:
+    def pelaa(self):
+        while True:
+            naytto.fill((0, 0, 0))
+            naytto.blit(taustakuva, (0, 0))
+ 
+            # Aloitusnäyttö
+            teksti = fontti.render("HIRSIPUU", True, (255, 255, 255))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
+            teksti2 = fontti.render("F1 - Uusi peli", True, (255, 255, 255))    # F1 - Uusi peli
+            naytto.blit(teksti2, (leveys // 2 - teksti2.get_width() // 2, 100)) 
+            teksti3 = fontti.render("F2 - Lisää pelaaja", True, (255, 255, 255)) # F2 - Lisää pelaaja
+            naytto.blit(teksti3, (leveys // 2 - teksti3.get_width() // 2, 150))
+            teksti4 = fontti.render("ESC - Lopeta", True, (255, 255, 255))       # ESC - Lopeta
+            naytto.blit(teksti4, (leveys // 2 - teksti4.get_width() // 2, 200))
+ 
+            pygame.display.flip()
+            pygame.time.delay(10)
+ 
+            for tapahtuma in pygame.event.get():
+                if tapahtuma.type == pygame.KEYDOWN:
+                    if tapahtuma.key == pygame.K_F1:
                     hirsipuu.uusi_peli()
                 if tapahtuma.key == pygame.K_F2:
                     hirsipuu.lisaa_pelaaja()
