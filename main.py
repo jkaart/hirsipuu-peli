@@ -17,9 +17,17 @@ class Pelaaja:
 class Hirsipuu:
     def __init__(self) -> None:
         self.pelaajat = []
+        self.sanalista = ["auto","pallo"]
+        self.oikea_vastaus = ""
+        self.arvattava_sana = ""
+        self.uusi_peli()
+    
+    def __str__(self) -> str:
+        return " ".join(self.arvattava_sana)
 
     def uusi_peli(self):
-        pass
+        self.oikea_vastaus = self.uusi_sana()
+        self.arvattava_sana = list("_" * len(self.oikea_vastaus))
     
     def lisaa_pelaaja(self):
         nimi = input("Anna pelaajan nimi: ")
@@ -28,8 +36,32 @@ class Hirsipuu:
         #pelaaja.uusi_pelaaja()
         self.pelaajat.append(pelaaja)
 
+    def uusi_sana(self):
+        return random.choice(self.sanalista)
+    
+    def arvaus(self):
+        try:
+            syote = input("Kirjain tai sana: ")
+            if len(syote) == 1:
+                i = self.oikea_vastaus.index(syote)
+                    
+                self.arvattava_sana[i] = syote
+                if syote in self.arvattava_sana:
+                    return True
+                else:
+                    if syote == self.oikea_vastaus:
+                        print("löytyi koko sana!")
+                    print("Ei löytynyt")
+        except ValueError:
+            print("ei löytynyt")
+
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
 
-hirsipuu.pelaajat[0].lisaa_piste()
-print(hirsipuu.pelaajat[0])
+while True:
+    for pelaaja in hirsipuu.pelaajat:
+        print(pelaaja)
+        print(hirsipuu)
+        arvaus = hirsipuu.arvaus()
+        if arvaus:
+            pelaaja.lisaa_piste()
