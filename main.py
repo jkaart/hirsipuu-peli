@@ -1,8 +1,8 @@
 import random
 
 class Pelaaja:
-    def __init__(self) -> None:
-        self.nimi = ""
+    def __init__(self, nimi: str) -> None:
+        self.nimi = nimi
         
 
     def uusi_pelaaja(self):
@@ -15,16 +15,11 @@ class Hirsipuu:
         pass
     
     def lisaa_pelaaja(self):
-        #self.nimi = input("Anna pelaajan nimi: ")
-        pelaaja = Pelaaja("aa")
+        nimi = input("Anna pelaajan nimi: ")
+        pelaaja = Pelaaja(nimi)
 
         #pelaaja.uusi_pelaaja()
         self.pelaajat.append(pelaaja)
 
-
-
-        
-
-
-hirsipuu = Hirsipuu
+hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
