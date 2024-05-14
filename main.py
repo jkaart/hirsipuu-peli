@@ -1,22 +1,25 @@
 import pygame
 import random
-
+ 
 pygame.init()
-
+ 
 #asetukset
 leveys = 800
 korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
 fontti = pygame.font.SysFont("Arial", 24)
-
+taustakuva = pygame.image.load("tausta.jpg")
+ 
+pygame.display.set_caption("Hirsipuu")
+ 
 class Pelaaja:
     def __init__(self, nimi: str) -> None:
         self.nimi = nimi
         self.pisteet = 0
-
+ 
     def lisaa_piste(self):
         self.pisteet += 1
-
+ 
     def hae_pisteet(self):
         return self.pisteet
     
@@ -30,28 +33,29 @@ class Hirsipuu:
         self.oikea_vastaus = ""
         self.arvattava_sana = ""
         self.uusi_peli()
-
+        self.pelaa()
+ 
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
-
+ 
     def uusi_peli(self):
         self.oikea_vastaus = self.uusi_sana()
         self.arvattava_sana = list("_" * len(self.oikea_vastaus))
-
+ 
     def lisaa_pelaaja(self):
         nimi = input("Anna pelaajan nimi: ")
         pelaaja = Pelaaja(nimi)
         self.pelaajat.append(pelaaja)
-
+ 
     def uusi_sana(self):
         return random.choice(self.sanalista)
-
+ 
     def arvaus(self):
         try:
             syote = input("Kirjain tai sana: ")
             if len(syote) == 1:
                 i = self.oikea_vastaus.index(syote)
-
+ 
                 self.arvattava_sana[i] = syote
                 if syote in self.arvattava_sana:
                     return True
@@ -61,7 +65,7 @@ class Hirsipuu:
                     print("Ei löytynyt")
         except ValueError:
             print("ei löytynyt")
-
+ 
     def pelaa(self):
         while True:
             naytto.fill((0, 0, 0))
@@ -83,19 +87,20 @@ class Hirsipuu:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_F1:
-                    hirsipuu.uusi_peli()
-                if tapahtuma.key == pygame.K_F2:
-                    hirsipuu.lisaa_pelaaja()
-                if tapahtuma.key == pygame.K_ESCAPE:
-                    return
-                if tapahtuma.type == pygame.QUIT:
-                    return
-
-        pygame.display.flip()
-
+                        self.uusi_peli()
+                    if tapahtuma.key == pygame.K_F2:
+                        self.lisaa_pelaaja()
+                    if tapahtuma.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                    if tapahtuma.type == pygame.QUIT:
+                        pygame.quit()
+ 
+            pygame.display.flip()
+        
+ 
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
-
+ 
 hirsipuu.pelaajat[0].lisaa_piste()
 print(hirsipuu.pelaajat[0])
 while True:
