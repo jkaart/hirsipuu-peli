@@ -20,6 +20,7 @@ class Hirsipuu:
         self.sanalista = ["auto","pallo"]
         self.oikea_vastaus = ""
         self.arvattava_sana = ""
+        self.__vaarat_kirjaimet = []
         self.uusi_peli()
     
     def __str__(self) -> str:
@@ -40,20 +41,24 @@ class Hirsipuu:
         return random.choice(self.sanalista)
     
     def arvaus(self):
-        try:
-            syote = input("Kirjain tai sana: ")
-            if len(syote) == 1:
-                i = self.oikea_vastaus.index(syote)
-                    
-                self.arvattava_sana[i] = syote
-                if syote in self.arvattava_sana:
-                    return True
-                else:
-                    if syote == self.oikea_vastaus:
-                        print("löytyi koko sana!")
-                    print("Ei löytynyt")
-        except ValueError:
-            print("ei löytynyt")
+        loytyi = False
+        syote = input("Kirjain tai sana: ")
+        if len(syote) == 1: # Jos annetaan yksi kirjain
+            for i in range(len(self.oikea_vastaus)):
+                if syote == self.arvattava_sana[i]:
+                    continue
+                if syote == self.oikea_vastaus[i]:
+                    self.arvattava_sana[i] = syote
+                    loytyi = True
+            if loytyi == False:
+                self.__vaarat_kirjaimet.append(syote)
+        elif syote == self.oikea_vastaus: # Jos annettu enemmän kuin yksi kirjain ja vastaus on oikein
+            loytyi = True
+
+        return loytyi
+
+    def vaarat_kirjaimet(self):
+        return list(set(self.__vaarat_kirjaimet)) # Poistetaan mahdolliset duplikaatit ja palautetaan takaisin listana
 
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
@@ -62,6 +67,7 @@ while True:
     for pelaaja in hirsipuu.pelaajat:
         print(pelaaja)
         print(hirsipuu)
+        print(hirsipuu.vaarat_kirjaimet())
         arvaus = hirsipuu.arvaus()
         if arvaus:
             pelaaja.lisaa_piste()
