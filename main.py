@@ -9,6 +9,7 @@ korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
 fontti = pygame.font.SysFont("Arial", 24)
 taustakuva = pygame.image.load("tausta.jpg")
+hirsipuu_kuvat = [pygame.image.load("hangman-0.png"), pygame.image.load("hangman-1.png"), pygame.image.load("hangman-2.png"), pygame.image.load("hangman-3.png"), pygame.image.load("hangman-4.png"), pygame.image.load("hangman-5.png"), pygame.image.load("hangman-6.png")]
  
 pygame.display.set_caption("Hirsipuu")
  
@@ -70,7 +71,7 @@ class Hirsipuu:
         while True:
             naytto.fill((0, 0, 0))
             naytto.blit(taustakuva, (0, 0))
- 
+        
             # Aloitusnäyttö
             teksti = fontti.render("HIRSIPUU", True, (255, 255, 255))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
