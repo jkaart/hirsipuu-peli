@@ -31,16 +31,24 @@ class Hirsipuu:
     def __init__(self) -> None:
         self.pelaajat = []
         self.sanalista = ["auto","pallo"]
+        self.kaytettavat_sanat = []
         self.oikea_vastaus = ""
         self.arvattava_sana = ""
-        self.pelaa()
+        self.vaikeus = 4
+#        self.pelaa()
         self.__vaarat_kirjaimet = []
         self.uusi_peli()
     
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
 
+    def vaikeusaste(self, pituus: int):
+        for sana in self.sanalista:
+            if len(sana) == pituus:
+                self.kaytettavat_sanat.append(sana)
+
     def uusi_peli(self):
+        self.vaikeusaste(self.vaikeus)
         self.oikea_vastaus = self.uusi_sana()
         self.arvattava_sana = list("_" * len(self.oikea_vastaus))
     
@@ -48,7 +56,7 @@ class Hirsipuu:
         nimi = input("Anna pelaajan nimi: ")
         pelaaja = Pelaaja(nimi)
         self.pelaajat.append(pelaaja)
-        
+
     def pelaa(self):
         while True:
             naytto.fill((0, 0, 0))
@@ -81,7 +89,7 @@ class Hirsipuu:
             pygame.display.flip()
 
     def uusi_sana(self):
-        return random.choice(self.sanalista)
+        return random.choice(self.kaytettavat_sanat)
     
     def arvaus(self):
         loytyi = False
@@ -106,8 +114,8 @@ class Hirsipuu:
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
  
-hirsipuu.pelaajat[0].lisaa_piste()
-print(hirsipuu.pelaajat[0])
+#hirsipuu.pelaajat[0].lisaa_piste()
+#print(hirsipuu.pelaajat[0])
 
 while True:
     for pelaaja in hirsipuu.pelaajat:
