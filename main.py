@@ -59,8 +59,7 @@ class Hirsipuu:
 
     def uusi_peli(self):
         while True:
-            naytto.fill((0, 0, 0))
-            naytto.blit(taustakuva, (0, 0))
+            self.tausta()
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
                         pygame.quit()
@@ -97,8 +96,11 @@ class Hirsipuu:
                 self.pelaajat.append                                            
                 nimi = self.tekstiboxi("Anna pelaajan nimi:")                   
             else:
-                self.pelaa()                                                    
+                self.pelaa()         
 
+    def tausta(self):
+        naytto.fill((0, 0, 0))
+        naytto.blit(taustakuva, (0, 0))                                           
 
     def tekstiboxi(self, viesti: str) -> str:
         teksti = ""                             
@@ -125,8 +127,7 @@ class Hirsipuu:
 
     def pelaa(self):
         while True:
-            naytto.fill((0, 0, 0))
-            naytto.blit(taustakuva, (0, 0))
+            self.tausta()
 
             # Aloitusnäyttö
             teksti = fontti2.render("HIRSIPUU", True, (0, 0, 0))
