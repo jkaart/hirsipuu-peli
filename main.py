@@ -34,10 +34,10 @@ class Hirsipuu:
         self.kaytettavat_sanat = []
         self.oikea_vastaus = ""
         self.arvattava_sana = ""
-        self.vaikeus = 4
-#        self.pelaa()
+        self.vaikeus = [4,5,6]
         self.__vaarat_kirjaimet = []
-        self.uusi_peli()
+        self.pelaa()
+#        self.uusi_peli()
     
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
@@ -47,20 +47,50 @@ class Hirsipuu:
             if len(sana) == pituus:
                 self.kaytettavat_sanat.append(sana)
 
-    def uusi_peli(self):
-        self.vaikeusaste(self.vaikeus)
+    def vaikeus_valinta(self, vaikeus: int):
+        self.vaikeusaste(self.vaikeus[vaikeus])
         self.oikea_vastaus = self.uusi_sana()
         self.arvattava_sana = list("_" * len(self.oikea_vastaus))
-    
+
+    def uusi_peli(self):
+        while True:
+            self.tausta()
+            for tapahtuma in pygame.event.get():
+                if tapahtuma.type == pygame.QUIT:
+                        pygame.quit()
+                if tapahtuma.type == pygame.KEYDOWN:
+                    if tapahtuma.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                    if tapahtuma.type == pygame.K_1:
+                        self.vaikeus_valinta[0]
+                    if tapahtuma.type == pygame.K_2:
+                        self.vaikeus_valinta[1]
+                    if tapahtuma.type == pygame.K_3:
+                        self.vaikeus_valinta[2]
+
+            teksti = fontti.render("Vaikeusaste", True, (255, 255, 255))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
+            teksti = fontti.render("1 = Helppo", True, (255, 255, 255))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 100))
+            teksti = fontti.render("2 = Keskivaikea", True, (255, 255, 255))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 150))
+            teksti = fontti.render("3 = Vaikea", True, (255, 255, 255))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 200))
+
+            pygame.display.flip()
+
     def lisaa_pelaaja(self):
         nimi = input("Anna pelaajan nimi: ")
         pelaaja = Pelaaja(nimi)
         self.pelaajat.append(pelaaja)
 
+    def tausta(self):
+        naytto.fill((0, 0, 0))
+        naytto.blit(taustakuva, (0, 0))
+        
     def pelaa(self):
         while True:
-            naytto.fill((0, 0, 0))
-            naytto.blit(taustakuva, (0, 0))
+            self.tausta()
         
             # Aloitusnäyttö
             teksti = fontti.render("HIRSIPUU", True, (255, 255, 255))
