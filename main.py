@@ -9,7 +9,7 @@ korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
 fontti = pygame.font.SysFont("Arial", 24)
 taustakuva = pygame.image.load("tausta.jpg")
-hirsipuu_kuvat = [pygame.image.load("hangman-0.png"), pygame.image.load("hangman-1.png"), pygame.image.load("hangman-2.png"), pygame.image.load("hangman-3.png"), pygame.image.load("hangman-4.png"), pygame.image.load("hangman-5.png"), pygame.image.load("hangman-6.png")]
+hirsipuu_kuvat = [pygame.image.load("Hangman-0.png"), pygame.image.load("Hangman-1.png"), pygame.image.load("Hangman-2.png"), pygame.image.load("Hangman-3.png"), pygame.image.load("Hangman-4.png"), pygame.image.load("Hangman-5.png"), pygame.image.load("Hangman-6.png")]
  
 pygame.display.set_caption("Hirsipuu")
  
