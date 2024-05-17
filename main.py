@@ -102,6 +102,7 @@ class Hirsipuu:
         naytto.fill((0, 0, 0))
         naytto.blit(taustakuva, (0, 0))                                           
 
+    # Tekstiboxi johon voi kirjoittaa
     def tekstiboxi(self, viesti: str) -> str:
         teksti = ""                             
         aktiivinen = True
