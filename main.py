@@ -11,6 +11,7 @@ naytto = pygame.display.set_mode((leveys, korkeus))
 fontti = pygame.font.SysFont("Arial", 24)
 fontti2 = pygame.font.SysFont("Arial", 40, bold=True)
 taustakuva = pygame.image.load("tausta.jpg")
+
 hirsipuu_kuvat = [pygame.image.load("hangman-0.png"), pygame.image.load("hangman-1.png"),
                   pygame.image.load("hangman-2.png"), pygame.image.load("hangman-3.png"),
                   pygame.image.load("hangman-4.png"), pygame.image.load("hangman-5.png"),
@@ -42,7 +43,8 @@ class Hirsipuu:
         self.vaikeus = [4,5,6]
         self.__vaarat_kirjaimet = []
         self.pelaa()
-#       self.uusi_peli()
+
+#        self.uusi_peli()
 
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
@@ -72,17 +74,17 @@ class Hirsipuu:
                         self.vaikeus_valinta[1]
                     if tapahtuma.type == pygame.K_3:
                         self.vaikeus_valinta[2]
-            teksti = fontti.render("Vaikeusaste", True, (0, 0, 0))
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 80))
-            teksti = fontti.render("1 = Helppo", True, (0, 0, 0))
+
+            teksti = fontti.render("Vaikeusaste", True, (255, 255, 255))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
+            teksti = fontti.render("1 = Helppo", True, (255, 255, 255))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 100))
+            teksti = fontti.render("2 = Keskivaikea", True, (255, 255, 255))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 150))
-            teksti = fontti.render("2 = Keskivaikea", True, (0, 0, 0))
+            teksti = fontti.render("3 = Vaikea", True, (255, 255, 255))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 200))
-            teksti = fontti.render("3 = Vaikea", True, (0, 0, 0))
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 250))
 
             pygame.display.flip()
-
 
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
@@ -123,6 +125,14 @@ class Hirsipuu:
             naytto.blit(syote_alue, (leveys // 2 - syote_alue.get_width() // 2, korkeus // 2))      # Syötealueen sijainti
 
             pygame.display.flip()
+           
+    def tausta(self):
+        naytto.fill((0, 0, 0))
+        naytto.blit(taustakuva, (0, 0))
+        
+    def pelaa(self):
+        while True:
+            self.tausta()
         
         return teksti
 
@@ -157,7 +167,6 @@ class Hirsipuu:
                         
             pygame.display.flip()
 
-
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
 
@@ -179,13 +188,13 @@ class Hirsipuu:
         return loytyi
 
     def vaarat_kirjaimet(self):
-        return list(set(self.__vaarat_kirjaimet))  # Poistetaan mahdolliset duplikaatit ja palautetaan takaisin listana
+        return list(set(self.__vaarat_kirjaimet)) # Poistetaan mahdolliset duplikaatit ja palautetaan takaisin listana
 
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
-
-hirsipuu.pelaajat[0].lisaa_piste()
-print(hirsipuu.pelaajat[0])
+ 
+#hirsipuu.pelaajat[0].lisaa_piste()
+#print(hirsipuu.pelaajat[0])
 
 while True:
     for pelaaja in hirsipuu.pelaajat:
