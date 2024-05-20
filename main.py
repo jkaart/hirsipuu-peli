@@ -1,18 +1,24 @@
 import pygame
 import random
- 
+import sys
+
 pygame.init()
- 
-#asetukset
+
+# Asetukset
 leveys = 800
 korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
 fontti = pygame.font.SysFont("Arial", 24)
+fontti2 = pygame.font.SysFont("Arial", 40, bold=True)
 taustakuva = pygame.image.load("tausta.jpg")
-hirsipuu_kuvat = [pygame.image.load("Hangman-0.png"), pygame.image.load("Hangman-1.png"), pygame.image.load("Hangman-2.png"), pygame.image.load("Hangman-3.png"), pygame.image.load("Hangman-4.png"), pygame.image.load("Hangman-5.png"), pygame.image.load("Hangman-6.png")]
- 
+
+hirsipuu_kuvat = [pygame.image.load("hangman-0.png"), pygame.image.load("hangman-1.png"),
+                  pygame.image.load("hangman-2.png"), pygame.image.load("hangman-3.png"),
+                  pygame.image.load("hangman-4.png"), pygame.image.load("hangman-5.png"),
+                  pygame.image.load("hangman-6.png")]
+
 pygame.display.set_caption("Hirsipuu")
- 
+
 class Pelaaja:
     def __init__(self, nimi: str) -> None:
         self.nimi = nimi
@@ -23,10 +29,10 @@ class Pelaaja:
 
     def hae_pisteet(self):
         return self.pisteet
-    
+
     def __str__(self) -> str:
         return f"Pelaajan {self.nimi} pisteet {self.pisteet}"
-    
+
 class Hirsipuu:
     def __init__(self) -> None:
         self.pelaajat = []
@@ -37,8 +43,9 @@ class Hirsipuu:
         self.vaikeus = [4,5,6]
         self.__vaarat_kirjaimet = []
         self.pelaa()
+
 #        self.uusi_peli()
-    
+
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
 
@@ -80,10 +87,45 @@ class Hirsipuu:
             pygame.display.flip()
 
     def lisaa_pelaaja(self):
-        nimi = input("Anna pelaajan nimi: ")
+        nimi = self.tekstiboxi("Anna pelaajan nimi:")
         pelaaja = Pelaaja(nimi)
         self.pelaajat.append(pelaaja)
 
+        # Kysytään lisätäänkö pelaajia
+        while True:
+            lisaa_muita = self.tekstiboxi("Lisätäänkö toinen pelaaja? (k/e): ") 
+            if lisaa_muita.lower() == "k":                                      
+                self.pelaajat.append                                            
+                nimi = self.tekstiboxi("Anna pelaajan nimi:")                   
+            else:
+                self.pelaa()         
+
+    def tausta(self):
+        naytto.fill((0, 0, 0))
+        naytto.blit(taustakuva, (0, 0))                                           
+
+    # Tekstiboxi johon voi kirjoittaa
+    def tekstiboxi(self, viesti: str) -> str:
+        teksti = ""                             
+        aktiivinen = True
+        while aktiivinen:
+            for tapahtuma in pygame.event.get():
+                if tapahtuma.type == pygame.QUIT:
+                    pygame.quit()
+                if tapahtuma.type == pygame.KEYDOWN:
+                    if tapahtuma.key == pygame.K_RETURN:
+                        aktiivinen = False
+                    elif tapahtuma.key == pygame.K_BACKSPACE:
+                        teksti = teksti[:-1]
+                    else:
+                        teksti += tapahtuma.unicode
+
+            naytto.blit(taustakuva, (0, 0))  
+            syote_alue = fontti.render(viesti + teksti, True, (0, 0, 0))                            # Syötealue johon teksti tulee
+            naytto.blit(syote_alue, (leveys // 2 - syote_alue.get_width() // 2, korkeus // 2))      # Syötealueen sijainti
+
+            pygame.display.flip()
+           
     def tausta(self):
         naytto.fill((0, 0, 0))
         naytto.blit(taustakuva, (0, 0))
@@ -92,20 +134,29 @@ class Hirsipuu:
         while True:
             self.tausta()
         
+        return teksti
+
+    def pelaa(self):
+        while True:
+            self.tausta()
+
             # Aloitusnäyttö
-            teksti = fontti.render("HIRSIPUU", True, (255, 255, 255))
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
-            teksti2 = fontti.render("F1 - Uusi peli", True, (255, 255, 255))    # F1 - Uusi peli
-            naytto.blit(teksti2, (leveys // 2 - teksti2.get_width() // 2, 100)) 
-            teksti3 = fontti.render("F2 - Lisää pelaaja", True, (255, 255, 255)) # F2 - Lisää pelaaja
-            naytto.blit(teksti3, (leveys // 2 - teksti3.get_width() // 2, 150))
-            teksti4 = fontti.render("ESC - Lopeta", True, (255, 255, 255))       # ESC - Lopeta
-            naytto.blit(teksti4, (leveys // 2 - teksti4.get_width() // 2, 200))
- 
+            teksti = fontti2.render("HIRSIPUU", True, (0, 0, 0))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 80 + teksti.get_height()// 2))
+            teksti2 = fontti.render("F1 - Uusi peli", True, (0, 0, 0))  # F1 - Uusi peli
+            naytto.blit(teksti2, (leveys // 2 - teksti2.get_width() // 2, 150 + teksti.get_height()// 2))
+            teksti3 = fontti.render("F2 - Lisää pelaaja", True, (0, 0, 0))  # F2 - Lisää pelaaja
+            naytto.blit(teksti3, (leveys // 2 - teksti3.get_width() // 2, 200 + teksti.get_height()// 2))
+            teksti4 = fontti.render("ESC - Lopeta", True, (0, 0, 0))  # ESC - Lopeta
+            naytto.blit(teksti4, (leveys // 2 - teksti4.get_width() // 2, 250 + teksti.get_height()// 2))
+
             pygame.display.flip()
             pygame.time.delay(10)
- 
+
             for tapahtuma in pygame.event.get():
+                if tapahtuma.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_F1:
                         self.uusi_peli()
@@ -113,14 +164,12 @@ class Hirsipuu:
                         self.lisaa_pelaaja()
                     if tapahtuma.key == pygame.K_ESCAPE:
                         pygame.quit()
-                    if tapahtuma.type == pygame.QUIT:
-                        pygame.quit()
- 
+                        
             pygame.display.flip()
 
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
-    
+
     def arvaus(self):
         loytyi = False
         syote = input("Kirjain tai sana: ")
