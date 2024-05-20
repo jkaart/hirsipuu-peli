@@ -98,11 +98,7 @@ class Hirsipuu:
                 self.pelaajat.append                                            
                 nimi = self.tekstiboxi("Anna pelaajan nimi:")                   
             else:
-                self.pelaa()         
-
-    def tausta(self):
-        naytto.fill((0, 0, 0))
-        naytto.blit(taustakuva, (0, 0))                                           
+                self.pelaa()                                     
 
     # Tekstiboxi johon voi kirjoittaa
     def tekstiboxi(self, viesti: str) -> str:
