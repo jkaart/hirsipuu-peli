@@ -37,7 +37,6 @@ class Hirsipuu:
     def __init__(self) -> None:
         self.sanalistat = Sanalistat()
         self.pelaajat = []
-        self.sanalista = ["auto","pallo"]
         self.kaytettavat_sanat = []
         self.oikea_vastaus = ""
         self.arvattava_sana = ""
@@ -72,12 +71,12 @@ class Hirsipuu:
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_ESCAPE:
                         pygame.quit()
-                    if tapahtuma.type == pygame.K_1:
-                        self.vaikeus_valinta[0]
-                    if tapahtuma.type == pygame.K_2:
-                        self.vaikeus_valinta[1]
-                    if tapahtuma.type == pygame.K_3:
-                        self.vaikeus_valinta[2]
+                    if tapahtuma.key == pygame.K_1:
+                        self.helppo()
+                    if tapahtuma.key == pygame.K_2:
+                        self.keskivaikea()
+                    if tapahtuma.key == pygame.K_3:
+                        self.vaikea()
 
             teksti = fontti.render("Vaikeusaste", True, (255, 255, 255))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
@@ -89,6 +88,35 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 200))
 
             pygame.display.flip()
+        
+    def helppo(self):
+        self.vaikeus_valinta(0)
+        self.peliruutu()
+
+    def keskivaikea(self):
+        self.vaikeus_valinta(1)
+        self.peliruutu()
+
+    def vaikea(self):
+        self.vaikeus_valinta(2)
+        self.peliruutu()
+
+    def peliruutu(self):
+        self.tausta()
+        while True:
+            self.piira_arvattava_sana()
+            self.piira_vaarat()
+        
+    def piira_arvattava_sana(self):
+        arvattava_sana = fontti.render(" ".join(self.arvattava_sana), True, (255,255,255))
+        naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 200))
+        pygame.display.flip()
+
+    def piira_vaarat(self):
+        vaarat = ",".join(self.__vaarat_kirjaimet)
+        teksti = fontti.render(vaarat, True, (255,255,255))
+        naytto.blit(teksti, (100, korkeus - 100))
+        pygame.display.flip()
 
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
