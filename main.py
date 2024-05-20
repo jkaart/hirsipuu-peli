@@ -104,9 +104,19 @@ class Hirsipuu:
     def peliruutu(self):
         self.tausta()
         while True:
+            for tapahtuma in pygame.event.get():
+                if tapahtuma.type == pygame.QUIT:
+                    pygame.quit()
+                if tapahtuma.type == pygame.KEYDOWN:
+                    syote = tapahtuma.unicode
+                    self.arvaa(syote)
+    
+    def arvaa(self, syote):
+        if self.arvaus(syote):
             self.piira_arvattava_sana()
+        else:
             self.piira_vaarat()
-        
+
     def piira_arvattava_sana(self):
         arvattava_sana = fontti.render(" ".join(self.arvattava_sana), True, (255,255,255))
         naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 200))
@@ -192,9 +202,8 @@ class Hirsipuu:
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
 
-    def arvaus(self):
+    def arvaus(self, syote: str):
         loytyi = False
-        syote = input("Kirjain tai sana: ")
         if len(syote) == 1: # Jos annetaan yksi kirjain
             for i in range(len(self.oikea_vastaus)):
                 if syote == self.arvattava_sana[i]:
