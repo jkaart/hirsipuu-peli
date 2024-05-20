@@ -91,6 +91,7 @@ class Hirsipuu:
         
     def helppo(self):
         self.vaikeus_valinta(0)
+        print("Helppo!")
         self.peliruutu()
 
     def keskivaikea(self):
@@ -103,13 +104,16 @@ class Hirsipuu:
 
     def peliruutu(self):
         self.tausta()
+        self.piira_arvattava_sana()
+        pygame.display.flip()
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
                     pygame.quit()
                 if tapahtuma.type == pygame.KEYDOWN:
-                    syote = tapahtuma.unicode
-                    self.arvaa(syote)
+                    if tapahtuma.unicode in "abcdefghijklmnopqrstuvwxyzåäö":
+                        syote = tapahtuma.unicode
+                        self.arvaa(syote)
     
     def arvaa(self, syote):
         if self.arvaus(syote):
@@ -212,7 +216,8 @@ class Hirsipuu:
                     self.arvattava_sana[i] = syote
                     loytyi = True
             if loytyi == False:
-                self.__vaarat_kirjaimet.append(syote)
+                if not syote in self.__vaarat_kirjaimet:
+                    self.__vaarat_kirjaimet.append(syote)
         elif syote == self.oikea_vastaus: # Jos annettu enemmän kuin yksi kirjain ja vastaus on oikein
             loytyi = True
 
