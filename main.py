@@ -129,12 +129,6 @@ class Hirsipuu:
     def pelaa(self):
         while True:
             self.tausta()
-        
-        return teksti
-
-    def pelaa(self):
-        while True:
-            self.tausta()
 
             # Aloitusnäyttö
             teksti = fontti2.render("HIRSIPUU", True, (0, 0, 0))
