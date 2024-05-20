@@ -196,11 +196,11 @@ hirsipuu.lisaa_pelaaja()
 #hirsipuu.pelaajat[0].lisaa_piste()
 #print(hirsipuu.pelaajat[0])
 
-while True:
-    for pelaaja in hirsipuu.pelaajat:
-        print(pelaaja)
-        print(hirsipuu)
-        print(hirsipuu.vaarat_kirjaimet())
-        arvaus = hirsipuu.arvaus()
-        if arvaus:
-            pelaaja.lisaa_piste()
+# while True:
+#     for pelaaja in hirsipuu.pelaajat:
+#         print(pelaaja)
+#         print(hirsipuu)
+#         print(hirsipuu.vaarat_kirjaimet())
+#         arvaus = hirsipuu.arvaus()
+#         if arvaus:
+#             pelaaja.lisaa_piste()
