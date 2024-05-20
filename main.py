@@ -35,6 +35,7 @@ class Pelaaja:
 
 class Hirsipuu:
     def __init__(self) -> None:
+        self.sanalistat = Sanalistat()
         self.pelaajat = []
         self.sanalista = ["auto","pallo"]
         self.kaytettavat_sanat = []
@@ -50,10 +51,13 @@ class Hirsipuu:
         return " ".join(self.arvattava_sana)
 
     def vaikeusaste(self, pituus: int):
-        for sana in self.sanalista:
-            if len(sana) == pituus:
-                self.kaytettavat_sanat.append(sana)
-
+        if pituus == 4:
+            self.kaytettavat_sanat = self.sanalistat.nelja_kirjainta
+        if pituus == 5:
+            self.kaytettavat_sanat = self.sanalistat.viisi_kirjainta
+        if pituus == 6:
+            self.kaytettavat_sanat = self.sanalistat.kuusi_kirjainta
+    
     def vaikeus_valinta(self, vaikeus: int):
         self.vaikeusaste(self.vaikeus[vaikeus])
         self.oikea_vastaus = self.uusi_sana()
@@ -179,6 +183,41 @@ class Hirsipuu:
 
     def vaarat_kirjaimet(self):
         return list(set(self.__vaarat_kirjaimet)) # Poistetaan mahdolliset duplikaatit ja palautetaan takaisin listana
+
+class Sanalistat:
+    def __init__(self) -> None:
+        self.__nelja_kirjainta = []
+        self.__viisi_kirjainta = []
+        self.__kuusi_kirjainta = []
+        self.lue_tiedostot()
+
+    def lue_tiedosto(self, tiedostonimi: str, sanojen_pituus: int):
+        with open(tiedostonimi) as tiedosto:
+            for rivi in tiedosto:
+                rivi = rivi.replace("\n","")
+                if sanojen_pituus == 4:
+                    self.__nelja_kirjainta.append(rivi)
+                elif sanojen_pituus == 5:
+                    self.__viisi_kirjainta.append(rivi)
+                elif sanojen_pituus == 6:
+                    self.__kuusi_kirjainta.append(rivi)
+
+    def lue_tiedostot(self):
+        self.lue_tiedosto("sana_listat/nelja_kirjainta.txt", 4)
+        self.lue_tiedosto("sana_listat/viisi_kirjainta.txt", 5)
+        self.lue_tiedosto("sana_listat/kuusi_kirjainta.txt", 6)
+
+    @property
+    def nelja_kirjainta(self):
+        return self.__nelja_kirjainta
+    
+    @property
+    def viisi_kirjainta(self):
+        return self.__viisi_kirjainta
+    
+    @property
+    def kuusi_kirjainta(self):
+        return self.__kuusi_kirjainta
 
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
