@@ -90,20 +90,17 @@ class Hirsipuu:
             pygame.display.flip()
         
     def helppo(self):
-        self.vaikeus_valinta(0)
-        print("Helppo!")
-        self.peliruutu()
+        self.peliruutu(0)
 
     def keskivaikea(self):
-        self.vaikeus_valinta(1)
-        self.peliruutu()
+        self.peliruutu(1)
 
     def vaikea(self):
-        self.vaikeus_valinta(2)
-        self.peliruutu()
+        self.peliruutu(2)
 
-    def peliruutu(self):
-        self.tausta()
+    def peliruutu(self, vaikeusaste: int):
+        self.vaikeus_valinta(vaikeusaste)
+        
         self.piira_arvattava_sana()
         pygame.display.flip()
         while True:
@@ -114,7 +111,9 @@ class Hirsipuu:
                     if tapahtuma.unicode in "abcdefghijklmnopqrstuvwxyzåäö":
                         syote = tapahtuma.unicode
                         self.arvaa(syote)
-    
+            
+            pygame.display.flip()
+
     def arvaa(self, syote):
         if self.arvaus(syote):
             self.piira_arvattava_sana()
@@ -124,13 +123,11 @@ class Hirsipuu:
     def piira_arvattava_sana(self):
         arvattava_sana = fontti.render(" ".join(self.arvattava_sana), True, (255,255,255))
         naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 200))
-        pygame.display.flip()
 
     def piira_vaarat(self):
         vaarat = ",".join(self.__vaarat_kirjaimet)
         teksti = fontti.render(vaarat, True, (255,255,255))
         naytto.blit(teksti, (100, korkeus - 100))
-        pygame.display.flip()
 
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
