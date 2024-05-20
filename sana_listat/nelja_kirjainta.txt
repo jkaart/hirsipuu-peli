@@ -1,3 +1,4 @@
+# Nykysuomen sanalista. Kotimaisten kielten keskus. Päivitetty 30.4.2024 [viitattu 20.05.2024]. Saatavissa https://kaino.kotus.fi/lataa/nykysuomensanalista2024.csv
 havu
 suma
 kipu

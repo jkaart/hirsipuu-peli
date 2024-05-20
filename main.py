@@ -236,6 +236,8 @@ class Sanalistat:
     def lue_tiedosto(self, tiedostonimi: str, sanojen_pituus: int):
         with open(tiedostonimi) as tiedosto:
             for rivi in tiedosto:
+                if rivi.startswith("#"):
+                    continue
                 rivi = rivi.replace("\n","")
                 if sanojen_pituus == 4:
                     self.__nelja_kirjainta.append(rivi)
