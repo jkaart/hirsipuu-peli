@@ -35,8 +35,8 @@ class Pelaaja:
 
 class Hirsipuu:
     def __init__(self) -> None:
+        self.sanalistat = Sanalistat()
         self.pelaajat = []
-        self.sanalista = ["auto","pallo"]
         self.kaytettavat_sanat = []
         self.oikea_vastaus = ""
         self.arvattava_sana = ""
@@ -50,10 +50,13 @@ class Hirsipuu:
         return " ".join(self.arvattava_sana)
 
     def vaikeusaste(self, pituus: int):
-        for sana in self.sanalista:
-            if len(sana) == pituus:
-                self.kaytettavat_sanat.append(sana)
-
+        if pituus == 4:
+            self.kaytettavat_sanat = self.sanalistat.nelja_kirjainta
+        if pituus == 5:
+            self.kaytettavat_sanat = self.sanalistat.viisi_kirjainta
+        if pituus == 6:
+            self.kaytettavat_sanat = self.sanalistat.kuusi_kirjainta
+    
     def vaikeus_valinta(self, vaikeus: int):
         self.vaikeusaste(self.vaikeus[vaikeus])
         self.oikea_vastaus = self.uusi_sana()
@@ -68,12 +71,12 @@ class Hirsipuu:
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_ESCAPE:
                         pygame.quit()
-                    if tapahtuma.type == pygame.K_1:
-                        self.vaikeus_valinta[0]
-                    if tapahtuma.type == pygame.K_2:
-                        self.vaikeus_valinta[1]
-                    if tapahtuma.type == pygame.K_3:
-                        self.vaikeus_valinta[2]
+                    if tapahtuma.key == pygame.K_1:
+                        self.helppo()
+                    if tapahtuma.key == pygame.K_2:
+                        self.keskivaikea()
+                    if tapahtuma.key == pygame.K_3:
+                        self.vaikea()
 
             teksti = fontti.render("Vaikeusaste", True, (255, 255, 255))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
@@ -85,6 +88,46 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 200))
 
             pygame.display.flip()
+        
+    def helppo(self):
+        self.peliruutu(0)
+
+    def keskivaikea(self):
+        self.peliruutu(1)
+
+    def vaikea(self):
+        self.peliruutu(2)
+
+    def peliruutu(self, vaikeusaste: int):
+        self.vaikeus_valinta(vaikeusaste)
+        
+        self.piira_arvattava_sana()
+        pygame.display.flip()
+        while True:
+            for tapahtuma in pygame.event.get():
+                if tapahtuma.type == pygame.QUIT:
+                    pygame.quit()
+                if tapahtuma.type == pygame.KEYDOWN:
+                    if tapahtuma.unicode in "abcdefghijklmnopqrstuvwxyzåäö":
+                        syote = tapahtuma.unicode
+                        self.arvaa(syote)
+            
+            pygame.display.flip()
+
+    def arvaa(self, syote):
+        if self.arvaus(syote):
+            self.piira_arvattava_sana()
+        else:
+            self.piira_vaarat()
+
+    def piira_arvattava_sana(self):
+        arvattava_sana = fontti.render(" ".join(self.arvattava_sana), True, (255,255,255))
+        naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 200))
+
+    def piira_vaarat(self):
+        vaarat = ",".join(self.__vaarat_kirjaimet)
+        teksti = fontti.render(vaarat, True, (255,255,255))
+        naytto.blit(teksti, (100, korkeus - 100))
 
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
@@ -160,9 +203,8 @@ class Hirsipuu:
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
 
-    def arvaus(self):
+    def arvaus(self, syote: str):
         loytyi = False
-        syote = input("Kirjain tai sana: ")
         if len(syote) == 1: # Jos annetaan yksi kirjain
             for i in range(len(self.oikea_vastaus)):
                 if syote == self.arvattava_sana[i]:
@@ -171,7 +213,8 @@ class Hirsipuu:
                     self.arvattava_sana[i] = syote
                     loytyi = True
             if loytyi == False:
-                self.__vaarat_kirjaimet.append(syote)
+                if not syote in self.__vaarat_kirjaimet:
+                    self.__vaarat_kirjaimet.append(syote)
         elif syote == self.oikea_vastaus: # Jos annettu enemmän kuin yksi kirjain ja vastaus on oikein
             loytyi = True
 
@@ -179,6 +222,43 @@ class Hirsipuu:
 
     def vaarat_kirjaimet(self):
         return list(set(self.__vaarat_kirjaimet)) # Poistetaan mahdolliset duplikaatit ja palautetaan takaisin listana
+
+class Sanalistat:
+    def __init__(self) -> None:
+        self.__nelja_kirjainta = []
+        self.__viisi_kirjainta = []
+        self.__kuusi_kirjainta = []
+        self.lue_tiedostot()
+
+    def lue_tiedosto(self, tiedostonimi: str, sanojen_pituus: int):
+        with open(tiedostonimi) as tiedosto:
+            for rivi in tiedosto:
+                if rivi.startswith("#"):
+                    continue
+                rivi = rivi.replace("\n","")
+                if sanojen_pituus == 4:
+                    self.__nelja_kirjainta.append(rivi)
+                elif sanojen_pituus == 5:
+                    self.__viisi_kirjainta.append(rivi)
+                elif sanojen_pituus == 6:
+                    self.__kuusi_kirjainta.append(rivi)
+
+    def lue_tiedostot(self):
+        self.lue_tiedosto("sana_listat/nelja_kirjainta.txt", 4)
+        self.lue_tiedosto("sana_listat/viisi_kirjainta.txt", 5)
+        self.lue_tiedosto("sana_listat/kuusi_kirjainta.txt", 6)
+
+    @property
+    def nelja_kirjainta(self):
+        return self.__nelja_kirjainta
+    
+    @property
+    def viisi_kirjainta(self):
+        return self.__viisi_kirjainta
+    
+    @property
+    def kuusi_kirjainta(self):
+        return self.__kuusi_kirjainta
 
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
