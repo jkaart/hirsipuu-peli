@@ -118,6 +118,7 @@ class Hirsipuu:
                     
                     elif tapahtuma.key == pygame.K_RETURN:
                         if self.arvaus(syote):
+                            print(self.arvattava_sana)
                             syote = ""
                         else:
                             syote = ""
@@ -131,6 +132,35 @@ class Hirsipuu:
             teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (0,0,0))
             naytto.blit(teksti, (100, korkeus - 150))
             
+            pygame.display.flip()
+
+            if "".join(self.arvattava_sana) == self.oikea_vastaus:
+                self.lopetus_ruutu(True)
+            if self.pelitilanne == len(hirsipuu_kuvat) -1:
+                self.lopetus_ruutu(False)
+
+    def lopetus_ruutu(self, voitto: bool):
+        while True:
+            for tapahtuma in pygame.event.get():
+                if tapahtuma.type == pygame.QUIT:
+                    pygame.quit()
+            
+            self.tausta()
+            self.piirra_hirsipuu()
+            
+            teksti = fontti.render("Peli päättyi!", True, (0,0,0))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 250))
+            if voitto:
+                teksti = fontti.render("Voitit!", True, (0,0,0))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
+                teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (0,0,0))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 175))
+            else:
+                teksti = fontti.render("Hävisit!", True, (0,0,0))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
+                teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (0,0,0))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 175))
+                
             pygame.display.flip()
 
     def arvaa(self, syote):
