@@ -141,7 +141,7 @@ class Hirsipuu:
     def piira_vaarat(self):
         teksti = fontti.render("Väärät kirjaimet:", True, (0,0,0))
         naytto.blit(teksti, (100, korkeus - 115))
-        vaarat = ",".join(self.__vaarat_kirjaimet)
+        vaarat = ",".join(sorted(self.__vaarat_kirjaimet))
         teksti = fontti.render(vaarat, True, (0,0,0))
         naytto.blit(teksti, (100, korkeus - 90))
 
