@@ -79,13 +79,13 @@ class Hirsipuu:
                     if tapahtuma.key == pygame.K_3:
                         self.vaikea()
 
-            teksti = fontti.render("Vaikeusaste", True, (255, 255, 255))
+            teksti = fontti.render("Vaikeusaste", True, (0, 0, 0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 50))
-            teksti = fontti.render("1 = Helppo", True, (255, 255, 255))
+            teksti = fontti.render("1 = Helppo", True, (0, 0, 0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 100))
-            teksti = fontti.render("2 = Keskivaikea", True, (255, 255, 255))
+            teksti = fontti.render("2 = Keskivaikea", True, (0, 0, 0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 150))
-            teksti = fontti.render("3 = Vaikea", True, (255, 255, 255))
+            teksti = fontti.render("3 = Vaikea", True, (0, 0, 0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 200))
 
             pygame.display.flip()
@@ -185,19 +185,23 @@ class Hirsipuu:
         teksti = fontti.render(vaarat, True, (0,0,0))
         naytto.blit(teksti, (100, korkeus - 90))
 
+
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
         pelaaja = Pelaaja(nimi)
         self.pelaajat.append(pelaaja)
 
-        # Kysytään lisätäänkö pelaajia
         while True:
             lisaa_muita = self.tekstiboxi("Lisätäänkö toinen pelaaja? (k/e): ") 
-            if lisaa_muita.lower() == "k":                                      
-                self.pelaajat.append                                            
-                nimi = self.tekstiboxi("Anna pelaajan nimi:")                   
+            if lisaa_muita.lower() == "k":
+                nimi = self.tekstiboxi("Anna pelaajan nimi:")
+                pelaaja = Pelaaja(nimi)
+                self.pelaajat.append(pelaaja)
             else:
-                self.pelaa()                                     
+                break
+
+        self.uusi_peli()
+
 
     # Tekstiboxi johon voi kirjoittaa
     def tekstiboxi(self, viesti: str) -> str:
@@ -215,11 +219,12 @@ class Hirsipuu:
                     else:
                         teksti += tapahtuma.unicode
 
-            naytto.blit(taustakuva, (0, 0))  
-            syote_alue = fontti.render(viesti + teksti, True, (0, 0, 0))                            # Syötealue johon teksti tulee
-            naytto.blit(syote_alue, (leveys // 2 - syote_alue.get_width() // 2, korkeus // 2))      # Syötealueen sijainti
+            self.tausta()
+            syote_alue = fontti.render(viesti + teksti, True, (0, 0, 0))
+            naytto.blit(syote_alue, (leveys // 2 - syote_alue.get_width() // 2, korkeus // 2))
 
             pygame.display.flip()
+        return teksti
            
     def tausta(self):
         naytto.fill((0, 0, 0))
@@ -268,8 +273,8 @@ class Hirsipuu:
                 if syote == self.oikea_vastaus[i]:
                     self.arvattava_sana[i] = syote
                     loytyi = True
-            if loytyi == False:
-                if not syote in self.__vaarat_kirjaimet:
+            if not loytyi:
+                if syote not in self.__vaarat_kirjaimet:
                     self.__vaarat_kirjaimet.append(syote)
         elif syote == self.oikea_vastaus: # Jos annettu enemmän kuin yksi kirjain ja vastaus on oikein
             loytyi = True
@@ -318,6 +323,8 @@ class Sanalistat:
 
 hirsipuu = Hirsipuu()
 hirsipuu.lisaa_pelaaja()
+
+pygame.quit()
  
 #hirsipuu.pelaajat[0].lisaa_piste()
 #print(hirsipuu.pelaajat[0])
