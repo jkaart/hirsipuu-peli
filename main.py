@@ -164,7 +164,6 @@ class Hirsipuu:
             pygame.display.flip()
 
     def arvaa(self, syote):
-        print(syote)
         if self.arvaus(syote):
             self.piira_arvattava_sana()
         else:
