@@ -101,33 +101,49 @@ class Hirsipuu:
     def peliruutu(self, vaikeusaste: int):
         self.vaikeus_valinta(vaikeusaste)
         
-        self.piira_arvattava_sana()
-        pygame.display.flip()
+        # self.piira_arvattava_sana()
+        # pygame.display.flip()
+        syote = ""
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
                     pygame.quit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.unicode in "abcdefghijklmnopqrstuvwxyzåäö":
-                        syote = tapahtuma.unicode
-                        self.arvaa(syote)
+                        syote += tapahtuma.unicode
+                        #self.arvaa(syote)
+                    elif tapahtuma.key == pygame.K_BACKSPACE:
+                        syote = syote[:-1]
+                    
+                    elif tapahtuma.key == pygame.K_RETURN:
+                        self.arvaus(syote)
+                        syote = ""
+                        
+            self.tausta()
+            self.piira_arvattava_sana()
+            self.piira_vaarat()
+            teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (0,0,0))
+            naytto.blit(teksti, (100, korkeus - 150))
             
             pygame.display.flip()
 
     def arvaa(self, syote):
+        print(syote)
         if self.arvaus(syote):
             self.piira_arvattava_sana()
         else:
             self.piira_vaarat()
 
     def piira_arvattava_sana(self):
-        arvattava_sana = fontti.render(" ".join(self.arvattava_sana), True, (255,255,255))
+        arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (0,0,0))
         naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 200))
 
     def piira_vaarat(self):
+        teksti = fontti.render("Väärät kirjaimet:", True, (0,0,0))
+        naytto.blit(teksti, (100, korkeus - 115))
         vaarat = ",".join(self.__vaarat_kirjaimet)
-        teksti = fontti.render(vaarat, True, (255,255,255))
-        naytto.blit(teksti, (100, korkeus - 100))
+        teksti = fontti.render(vaarat, True, (0,0,0))
+        naytto.blit(teksti, (100, korkeus - 90))
 
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
