@@ -42,6 +42,7 @@ class Hirsipuu:
         self.arvattava_sana = ""
         self.vaikeus = [4,5,6]
         self.__vaarat_kirjaimet = []
+        self.pelitilanne = 0
         self.pelaa()
 
 #        self.uusi_peli()
@@ -116,10 +117,15 @@ class Hirsipuu:
                         syote = syote[:-1]
                     
                     elif tapahtuma.key == pygame.K_RETURN:
-                        self.arvaus(syote)
-                        syote = ""
+                        if self.arvaus(syote):
+                            syote = ""
+                        else:
+                            syote = ""
+                            if self.pelitilanne < len(hirsipuu_kuvat)-1:
+                                self.pelitilanne += 1
                         
             self.tausta()
+            self.piirra_hirsipuu()
             self.piira_arvattava_sana()
             self.piira_vaarat()
             teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (0,0,0))
@@ -133,6 +139,10 @@ class Hirsipuu:
             self.piira_arvattava_sana()
         else:
             self.piira_vaarat()
+
+    def piirra_hirsipuu(self):
+        kuva = hirsipuu_kuvat[self.pelitilanne]
+        naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 10))
 
     def piira_arvattava_sana(self):
         arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (0,0,0))
