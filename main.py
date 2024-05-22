@@ -10,7 +10,8 @@ korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
 fontti = pygame.font.SysFont("Arial", 24)
 fontti2 = pygame.font.SysFont("Arial", 40, bold=True)
-taustakuva = pygame.image.load("tausta.jpg")
+taustakuva = pygame.image.load("tausta.jpg")    
+taustakuva = pygame.transform.scale(taustakuva, (leveys, korkeus))
 
 hirsipuu_kuvat = [pygame.image.load("hangman-0.png"), pygame.image.load("hangman-1.png"),
                   pygame.image.load("hangman-2.png"), pygame.image.load("hangman-3.png"),
@@ -43,6 +44,7 @@ class Hirsipuu:
         self.vaikeus = [4,5,6]
         self.__vaarat_kirjaimet = []
         self.pelitilanne = 0
+        self.nykyinen_pelaaja = 0       
         self.pelaa()
 
 #        self.uusi_peli()
@@ -124,11 +126,13 @@ class Hirsipuu:
                             syote = ""
                             if self.pelitilanne < len(hirsipuu_kuvat)-1:
                                 self.pelitilanne += 1
+                        self.vuoronvaihto() # Vaihdetaan vuoroa
                         
             self.tausta()
             self.piirra_hirsipuu()
             self.piira_arvattava_sana()
             self.piira_vaarat()
+            self.piirra_vuoro()
             teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (0,0,0))
             naytto.blit(teksti, (100, korkeus - 150))
             
@@ -138,6 +142,14 @@ class Hirsipuu:
                 self.lopetus_ruutu(True)
             if self.pelitilanne == len(hirsipuu_kuvat) -1:
                 self.lopetus_ruutu(False)
+
+    def vuoronvaihto(self):
+        self.pelaajat.append(self.pelaajat.pop(0))      
+
+    def piirra_vuoro(self):
+        vuoro_teksti = fontti.render("Pelaaja: " + self.pelaajat[0].nimi, True, (0, 0, 0))
+        naytto.blit(vuoro_teksti, (leveys // 2 - vuoro_teksti.get_width() // 2, korkeus - 250))
+
 
     def lopetus_ruutu(self, voitto: bool):
         while True:
