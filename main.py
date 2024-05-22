@@ -176,12 +176,6 @@ class Hirsipuu:
 
             pygame.display.flip()
 
-    def arvaa(self, syote):
-        if self.arvaus(syote):
-            self.piira_arvattava_sana()
-        else:
-            self.piira_vaarat()
-
     def piirra_hirsipuu(self):
         kuva = hirsipuu_kuvat[self.pelitilanne]
         naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 10))
