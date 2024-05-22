@@ -44,10 +44,7 @@ class Hirsipuu:
         self.vaikeus = [4,5,6]
         self.__vaarat_kirjaimet = []
         self.pelitilanne = 0
-        self.nykyinen_pelaaja = 0       
-        self.pelaa()
-
-#        self.uusi_peli()
+        self.nykyinen_pelaaja = 0
 
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
@@ -103,10 +100,8 @@ class Hirsipuu:
 
     def peliruutu(self, vaikeusaste: int):
         self.vaikeus_valinta(vaikeusaste)
-        
-        # self.piira_arvattava_sana()
-        # pygame.display.flip()
         syote = ""
+
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
@@ -120,7 +115,6 @@ class Hirsipuu:
                     
                     elif tapahtuma.key == pygame.K_RETURN:
                         if self.arvaus(syote):
-                            print(self.arvattava_sana)
                             syote = ""
                         else:
                             syote = ""
@@ -332,19 +326,8 @@ class Sanalistat:
     def kuusi_kirjainta(self):
         return self.__kuusi_kirjainta
 
-hirsipuu = Hirsipuu()
-hirsipuu.lisaa_pelaaja()
+if __name__ == "__main__":
+    hirsipuu = Hirsipuu()
+    hirsipuu.pelaa()
 
-pygame.quit()
- 
-#hirsipuu.pelaajat[0].lisaa_piste()
-#print(hirsipuu.pelaajat[0])
-
-# while True:
-#     for pelaaja in hirsipuu.pelaajat:
-#         print(pelaaja)
-#         print(hirsipuu)
-#         print(hirsipuu.vaarat_kirjaimet())
-#         arvaus = hirsipuu.arvaus()
-#         if arvaus:
-#             pelaaja.lisaa_piste()
+    pygame.quit()
