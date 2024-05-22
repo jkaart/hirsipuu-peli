@@ -151,6 +151,8 @@ class Hirsipuu:
                     pygame.quit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_RETURN:
+                        self.__vaarat_kirjaimet = []
+                        self.pelitilanne = 0
                         self.uusi_peli()
                     if tapahtuma.key == pygame.K_ESCAPE:
                         pygame.quit()
