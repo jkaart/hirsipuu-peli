@@ -109,7 +109,6 @@ class Hirsipuu:
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.unicode in "abcdefghijklmnopqrstuvwxyzåäö":
                         syote += tapahtuma.unicode
-                        #self.arvaa(syote)
                     elif tapahtuma.key == pygame.K_BACKSPACE:
                         syote = syote[:-1]
                     
@@ -150,6 +149,11 @@ class Hirsipuu:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
                     pygame.quit()
+                if tapahtuma.type == pygame.KEYDOWN:
+                    if tapahtuma.key == pygame.K_RETURN:
+                        self.uusi_peli()
+                    if tapahtuma.key == pygame.K_ESCAPE:
+                        pygame.quit()
             
             self.tausta()
             self.piirra_hirsipuu()
@@ -166,7 +170,10 @@ class Hirsipuu:
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
                 teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 175))
-                
+            
+            teksti = fontti.render("Enter = Uusi peli ESC = lopeta peli", True, (0,0,0))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - teksti.get_height() - 20))
+
             pygame.display.flip()
 
     def arvaa(self, syote):
@@ -282,6 +289,7 @@ class Hirsipuu:
                 if syote not in self.__vaarat_kirjaimet:
                     self.__vaarat_kirjaimet.append(syote)
         elif syote == self.oikea_vastaus: # Jos annettu enemmän kuin yksi kirjain ja vastaus on oikein
+            self.arvattava_sana = syote
             loytyi = True
 
         return loytyi
