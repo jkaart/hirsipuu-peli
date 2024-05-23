@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+import os
 
 pygame.init()
 
@@ -8,18 +9,27 @@ pygame.init()
 leveys = 800
 korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
+
+# Fontit
 fontti = pygame.font.Font("creepster.ttf", 30)
 fontti2 = pygame.font.Font("creepster.ttf", 70)
 fontti3 = pygame.font.Font("creepster.ttf", 20)
-taustakuva = pygame.image.load("tausta3.jpg")
-taustakuva2 = pygame.image.load("tausta2.jpg")    
+
+# Taustakuvat
+taustakuva_polku = os.path.join("taustat", "tausta3.jpg")
+taustakuva2_polku = os.path.join("taustat", "tausta2.jpg")
+taustakuva = pygame.image.load(taustakuva_polku)
+taustakuva2 = pygame.image.load(taustakuva2_polku)
+
+# skaalataan taustakuva koko ruudun kokoiseksi
 taustakuva = pygame.transform.scale(taustakuva, (leveys, korkeus))
 taustakuva2 = pygame.transform.scale(taustakuva2, (leveys, korkeus))
 
-hirsipuu_kuvat = [pygame.image.load("hangman1bg.png"), pygame.image.load("hangman2bg.png"),
-                  pygame.image.load("hangman3bg.png"), pygame.image.load("hangman4bg.png"),
-                  pygame.image.load("hangman5bg.png"), pygame.image.load("hangman6bg.png"),
-                  pygame.image.load("hangman7bg.png")]
+# Kuvat
+hirsipuu_kuvat = []
+for i in range(1, 8):
+    kuva_polku = os.path.join("hangman_kuvat", f"hangman{i}bg.png") 
+    hirsipuu_kuvat.append(pygame.image.load(kuva_polku))
 
 pygame.display.set_caption("Hirsipuu")
 
