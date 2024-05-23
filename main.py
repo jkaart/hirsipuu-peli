@@ -45,7 +45,6 @@ class Hirsipuu:
         self.kaytettavat_sanat = []
         self.oikea_vastaus = ""
         self.arvattava_sana = ""
-        self.vaikeus = [4,5,6]
         self.__vaarat_kirjaimet = []
         self.pelitilanne = 0
         self.nykyinen_pelaaja = 0
@@ -53,16 +52,16 @@ class Hirsipuu:
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
 
-    def vaikeusaste(self, pituus: int):
-        if pituus == 4:
+    def vaikeusaste(self, vaikeus: int):
+        if vaikeus == 0:
             self.kaytettavat_sanat = self.sanalistat.nelja_kirjainta
-        if pituus == 5:
+        elif vaikeus == 1:
             self.kaytettavat_sanat = self.sanalistat.viisi_kirjainta
-        if pituus == 6:
+        elif vaikeus == 2:
             self.kaytettavat_sanat = self.sanalistat.kuusi_kirjainta
     
     def vaikeus_valinta(self, vaikeus: int):
-        self.vaikeusaste(self.vaikeus[vaikeus])
+        self.vaikeusaste(vaikeus)
         self.oikea_vastaus = self.uusi_sana()
         self.arvattava_sana = list("_" * len(self.oikea_vastaus))
 
@@ -125,8 +124,7 @@ class Hirsipuu:
                             if self.pelitilanne < len(hirsipuu_kuvat)-1:
                                 self.pelitilanne += 1
                         self.vuoronvaihto() # Vaihdetaan vuoroa
-                        
-            self.tausta()
+
             self.tausta2()
             self.piirra_hirsipuu()
             self.piira_arvattava_sana()
@@ -166,7 +164,6 @@ class Hirsipuu:
             
             self.tausta2()
             
-            
             teksti = fontti.render("Peli päättyi!", True, (0,0,0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 250))
             if voitto:
@@ -204,7 +201,6 @@ class Hirsipuu:
         teksti = fontti.render(vaarat, True, (0,0,0))
         naytto.blit(teksti, (100, korkeus - 70))
 
-
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
         pelaaja = Pelaaja(nimi)
@@ -220,7 +216,6 @@ class Hirsipuu:
                 break
 
         self.uusi_peli()
-
 
     # Tekstiboxi johon voi kirjoittaa
     def tekstiboxi(self, viesti: str) -> str:
@@ -255,32 +250,28 @@ class Hirsipuu:
         
     def pelaa(self):
         while True:
-            self.tausta()
-
-            # Aloitusnäyttö
-            teksti = fontti2.render("HIRSIPUU", True, (0, 0, 0))
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 112 + teksti.get_height()// 2))
-            teksti = fontti3.render("F2 - Lisää pelaaja", True, (169, 169, 169))  # F1 - Uusi peli
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 300 + teksti.get_height()))
-            teksti = fontti3.render("ESC - Lopeta", True, (169, 169, 169))  # F2 - Lisää pelaaja
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 350 + teksti.get_height()))
-
-            pygame.display.flip()
-            pygame.time.delay(10)
-
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
                 if tapahtuma.type == pygame.KEYDOWN:
-                    if tapahtuma.key == pygame.K_F1:
-                        self.uusi_peli()
-                    if tapahtuma.key == pygame.K_F2:
+                    if tapahtuma.key == pygame.K_RETURN:
                         self.lisaa_pelaaja()
                     if tapahtuma.key == pygame.K_ESCAPE:
                         pygame.quit()
-                        
+            
+            self.tausta()
+
+            # Aloitusnäyttö
+            teksti = fontti2.render("HIRSIPUU", True, (0, 0, 0))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 112 + teksti.get_height()// 2))
+            teksti = fontti3.render("Enter - Uusi peli", True, (169, 169, 169))  # Enter - Uusi peli
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 300 + teksti.get_height()))
+            teksti = fontti3.render("ESC - Lopeta", True, (169, 169, 169))  # ESC - Lopeta
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 350 + teksti.get_height()))
+
             pygame.display.flip()
+#            pygame.time.delay(10)
 
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
@@ -382,4 +373,3 @@ if __name__ == "__main__":
     hirsipuu = Hirsipuu()
     hirsipuu.pelaa()
 
-    pygame.quit()
