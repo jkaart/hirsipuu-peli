@@ -23,6 +23,7 @@ hirsipuu_kuvat = [pygame.image.load("hangman-0.png"), pygame.image.load("hangman
 
 pygame.display.set_caption("Hirsipuu")
 
+kello = pygame.time.Clock()
 class Pelaaja:
     def __init__(self, nimi: str) -> None:
         self.nimi = nimi
@@ -150,6 +151,7 @@ class Hirsipuu:
 
 
     def lopetus_ruutu(self, voitto: bool):
+        hangman = hangmanAnimaatio()
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
@@ -163,16 +165,19 @@ class Hirsipuu:
                         pygame.quit()
             
             self.tausta2()
-            self.piirra_hirsipuu()
+            
             
             teksti = fontti.render("Peli päättyi!", True, (0,0,0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 250))
             if voitto:
+                self.piirra_hirsipuu()
                 teksti = fontti.render("Voitit!", True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
                 teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 150))
             else:
+                hangman.paivita_kuva()
+                naytto.blit(hangman.piirra_kuva(),(0,0))
                 teksti = fontti.render("Hävisit!", True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
                 teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (0,0,0))
@@ -182,6 +187,7 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - teksti.get_height() - 20))
 
             pygame.display.flip()
+            kello.tick(60)
 
     def piirra_hirsipuu(self):
         kuva = hirsipuu_kuvat[self.pelitilanne]
@@ -336,6 +342,36 @@ class Sanalistat:
     @property
     def kuusi_kirjainta(self):
         return self.__kuusi_kirjainta
+
+class hangmanAnimaatio:
+    def __init__(self) -> None:
+        kansio = "hangman_animaatio/"
+        self.kuva = None
+        self.kuvat = [pygame.image.load(kansio+"hangman8bg.png"),pygame.image.load(kansio+"hangman9bg.png"),
+                        pygame.image.load(kansio+"hangman10bg.png"),pygame.image.load(kansio+"hangman11bg.png"),
+                        pygame.image.load(kansio+"hangman12bg.png"),pygame.image.load(kansio+"hangman13bg.png"),
+                        pygame.image.load(kansio+"hangman14bg.png"),pygame.image.load(kansio+"hangman15bg.png"),
+                        pygame.image.load(kansio+"hangman16bg.png"),pygame.image.load(kansio+"hangman17bg.png"),
+                        pygame.image.load(kansio+"hangman18bg.png"),pygame.image.load(kansio+"hangman19bg.png"),
+                        pygame.image.load(kansio+"hangman20bg.png"),pygame.image.load(kansio+"hangman21bg.png"),
+                        pygame.image.load(kansio+"hangman22bg.png"),pygame.image.load(kansio+"hangman23bg.png")]
+        self.laskuri = 0
+        self.indeksi = 0
+        self.nopeus = 10
+
+    def paivita_kuva(self):
+            
+            self.laskuri += 1
+            if self.indeksi == len(self.kuvat):
+                    # self.indeksi = 0 # jos halutaan looppaamaan
+                    return
+            self.kuva = self.kuvat[self.indeksi]
+            if self.laskuri > self.nopeus:
+                    self.indeksi += 1
+                    self.laskuri = 0
+
+    def piirra_kuva(self):
+          return self.kuva
 
 if __name__ == "__main__":
     hirsipuu = Hirsipuu()
