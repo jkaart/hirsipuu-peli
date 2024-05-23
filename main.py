@@ -53,16 +53,16 @@ class Hirsipuu:
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
 
-    def vaikeusaste(self, pituus: int):
-        if pituus == 4:
+    def vaikeusaste(self, vaikeus: int):
+        if vaikeus == 0:
             self.kaytettavat_sanat = self.sanalistat.nelja_kirjainta
-        if pituus == 5:
+        elif vaikeus == 1:
             self.kaytettavat_sanat = self.sanalistat.viisi_kirjainta
-        if pituus == 6:
+        elif vaikeus == 2:
             self.kaytettavat_sanat = self.sanalistat.kuusi_kirjainta
     
     def vaikeus_valinta(self, vaikeus: int):
-        self.vaikeusaste(self.vaikeus[vaikeus])
+        self.vaikeusaste(vaikeus)
         self.oikea_vastaus = self.uusi_sana()
         self.arvattava_sana = list("_" * len(self.oikea_vastaus))
 
