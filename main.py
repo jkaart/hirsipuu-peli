@@ -16,10 +16,10 @@ taustakuva2 = pygame.image.load("tausta2.jpg")
 taustakuva = pygame.transform.scale(taustakuva, (leveys, korkeus))
 taustakuva2 = pygame.transform.scale(taustakuva2, (leveys, korkeus))
 
-hirsipuu_kuvat = [pygame.image.load("hangman-0.png"), pygame.image.load("hangman-1.png"),
-                  pygame.image.load("hangman-2.png"), pygame.image.load("hangman-3.png"),
-                  pygame.image.load("hangman-4.png"), pygame.image.load("hangman-5.png"),
-                  pygame.image.load("hangman-6.png")]
+hirsipuu_kuvat = [pygame.image.load("hangman1bg.png"), pygame.image.load("hangman2bg.png"),
+                  pygame.image.load("hangman3bg.png"), pygame.image.load("hangman4bg.png"),
+                  pygame.image.load("hangman5bg.png"), pygame.image.load("hangman6bg.png"),
+                  pygame.image.load("hangman7bg.png")]
 
 pygame.display.set_caption("Hirsipuu")
 
