@@ -170,14 +170,14 @@ class Hirsipuu:
             teksti = fontti.render("Peli päättyi!", True, (0,0,0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 250))
             if voitto:
-                self.piirra_hirsipuu()
+                hangman.paivita_kuva()
+                naytto.blit(hangman.piirra_kuva(),(leveys //2 - hangman.leveys() // 2, 50))
                 teksti = fontti.render("Voitit!", True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
                 teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 150))
             else:
-                hangman.paivita_kuva()
-                naytto.blit(hangman.piirra_kuva(),(leveys //2 - hangman.leveys() // 2, 50))
+                self.piirra_hirsipuu()
                 teksti = fontti.render("Hävisit!", True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
                 teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (0,0,0))
