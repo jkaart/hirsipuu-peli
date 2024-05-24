@@ -315,7 +315,7 @@ class Sanalistat:
         self.lue_tiedostot()
 
     def lue_tiedosto(self, tiedostonimi: str, sanojen_pituus: int):
-            with open(tiedostonimi) as tiedosto:
+            with open(tiedostonimi, encoding="utf-8") as tiedosto:
                 for rivi in tiedosto:
                     if rivi.startswith("#"):
                         continue
