@@ -34,13 +34,14 @@ for i in range(1, 8):
 pygame.display.set_caption("Hirsipuu")
 
 kello = pygame.time.Clock()
+
 class Pelaaja:
     def __init__(self, nimi: str) -> None:
         self.nimi = nimi
         self.pisteet = 0
 
     def lisaa_piste(self):
-        self.pisteet += 1
+        self.pisteet += 3
 
     def hae_pisteet(self):
         return self.pisteet
@@ -140,6 +141,7 @@ class Hirsipuu:
             self.piira_arvattava_sana()
             self.piira_vaarat()
             self.piirra_vuoro()
+            self.piirra_pisteet()
             teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (0,0,0))
             naytto.blit(teksti, (100, korkeus - 200))
             
@@ -210,6 +212,11 @@ class Hirsipuu:
         vaarat = ",".join(sorted(self.__vaarat_kirjaimet))
         teksti = fontti.render(vaarat, True, (0,0,0))
         naytto.blit(teksti, (100, korkeus - 70))
+
+    def piirra_pisteet(self):
+        for pelaaja in self.pelaajat:   
+            teksti = fontti.render(str(pelaaja), True, (0,0,0))     
+            naytto.blit(teksti, (10, 10 + 40 * self.pelaajat.index(pelaaja)))
 
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
@@ -288,21 +295,38 @@ class Hirsipuu:
 
     def arvaus(self, syote: str):
         loytyi = False
-        if len(syote) == 1: # Jos annetaan yksi kirjain
-            for i in range(len(self.oikea_vastaus)):
-                if syote == self.arvattava_sana[i]:
-                    continue
-                if syote == self.oikea_vastaus[i]:
-                    self.arvattava_sana[i] = syote
+        if len(syote) == 1:                                                             # Jos annetaan yksi kirjain
+            for i in range(len(self.oikea_vastaus)):                                    # Käydään läpi oikea vastaus
+                if syote == self.arvattava_sana[i]:                                     # Jos syöte on jo arvattu
+                    continue                                                            # Jatketaan seuraavaan
+                if syote == self.oikea_vastaus[i]:                                      # Jos syöte on oikea kirjain
+                    self.arvattava_sana[i] = syote                                      # Lisätään kirjain arvattavaan sanaan
                     loytyi = True
-            if not loytyi:
-                if syote not in self.__vaarat_kirjaimet:
-                    self.__vaarat_kirjaimet.append(syote)
-        elif syote == self.oikea_vastaus: # Jos annettu enemmän kuin yksi kirjain ja vastaus on oikein
-            self.arvattava_sana = syote
-            loytyi = True
+            if not loytyi:                                                              # Jos syöte ei ole oikea kirjain
+                if syote not in self.__vaarat_kirjaimet:                                # ja jos syöte ei ole jo väärissä kirjaimissa
+                    self.__vaarat_kirjaimet.append(syote)                               # Lisätään syöte väärin arvattuihin
+                    if self.pelaajat[self.nykyinen_pelaaja].pisteet > 0:                # Jos pelaajalla on pisteitä...
+                        self.pelaajat[self.nykyinen_pelaaja].pisteet -= 1               # voidaan vähentää pelaajan pisteitä vääristä arvauksista
+            if loytyi:
+                self.pelaajat[self.nykyinen_pelaaja].lisaa_piste()                      # Lisätään pelaajalle pisteitä 3 kpl jos vastaus on oikein
+        elif syote == self.oikea_vastaus: 
+            self.arvattava_sana = syote                                                 # Jos syöte on oikea sana  
+            loytyi = True   
+            self.pelaajat[self.nykyinen_pelaaja].pisteet += 10                          # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
+        else:
+            if syote == self.oikea_vastaus and len(syote) == len(self.oikea_vastaus):   # Jos syöte on oikea sana ja pituus on sama kuin oikea sana 
+                self.arvattava_sana = syote                                            
+                loytyi = True
+                self.pelaajat[self.nykyinen_pelaaja].pisteet += 10                      # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
 
         return loytyi
+
+        # AJATUKSENA SIIS ETTÄ PELAAJA SAA OIKEASTA KIRJAIMESTA 3 PISTETTÄ JA JOS ARVAA KOKONAAN OIKEIN NIIN 10 PISTETTÄ
+        # JA JOS ARVAA VÄÄRIN NIIN PISTEITÄ VÄHENNETÄÄN 1 KPL
+        # ENTÄ KUN PELAAJA ARVAA VIIMEISEN/VIIMEISET KIRJAIMET JA SANA TÄYTTYY, SAAKO KOLME VAI 10 PISTETTÄ?
+
+        # MEINASIN MYÖS ETTÄ PELATTAISIIN VAIKKA 5 KIERROSTA JONKA JÄLKEEN SE KENELLÄ ENITEN PISTEITÄ VOITTAA???
+    
 
     def vaarat_kirjaimet(self):
         return list(set(self.__vaarat_kirjaimet)) # Poistetaan mahdolliset duplikaatit ja palautetaan takaisin listana
