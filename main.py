@@ -159,7 +159,7 @@ class Hirsipuu:
 
 
     def lopetus_ruutu(self, voitto: bool):
-        hangman = hangmanAnimaatio()
+        hangman_kavely = hangmanAnimaatio("kavely")
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
@@ -177,8 +177,8 @@ class Hirsipuu:
             teksti = fontti.render("Peli päättyi!", True, (0,0,0))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 250))
             if voitto:
-                hangman.paivita_kuva()
-                naytto.blit(hangman.piirra_kuva(),(leveys //2 - hangman.leveys() // 2, 50))
+                hangman_kavely.paivita_kuva()
+                naytto.blit(hangman_kavely.piirra_kuva(),(leveys //2 - hangman_kavely.leveys() // 2, 50))
                 teksti = fontti.render("Voitit!", True, (0,0,0))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
                 teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (0,0,0))
@@ -315,17 +315,19 @@ class Sanalistat:
         self.lue_tiedostot()
 
     def lue_tiedosto(self, tiedostonimi: str, sanojen_pituus: int):
-        with open(tiedostonimi) as tiedosto:
-            for rivi in tiedosto:
-                if rivi.startswith("#"):
-                    continue
-                rivi = rivi.replace("\n","")
-                if sanojen_pituus == 4:
-                    self.__nelja_kirjainta.append(rivi)
-                elif sanojen_pituus == 5:
-                    self.__viisi_kirjainta.append(rivi)
-                elif sanojen_pituus == 6:
-                    self.__kuusi_kirjainta.append(rivi)
+            with open(tiedostonimi, encoding="utf-8") as tiedosto:
+                for rivi in tiedosto:
+                    if rivi.startswith("#"):
+                        continue
+                    if rivi == "":
+                        continue
+                    rivi = rivi.replace("\n","")
+                    if sanojen_pituus == 4:
+                        self.__nelja_kirjainta.append(rivi)
+                    elif sanojen_pituus == 5:
+                        self.__viisi_kirjainta.append(rivi)
+                    elif sanojen_pituus == 6:
+                        self.__kuusi_kirjainta.append(rivi)
 
     def lue_tiedostot(self):
         self.lue_tiedosto("sana_listat/nelja_kirjainta.txt", 4)
@@ -345,17 +347,12 @@ class Sanalistat:
         return self.__kuusi_kirjainta
 
 class hangmanAnimaatio:
-    def __init__(self) -> None:
-        kansio = "hangman_animaatio/"
+    def __init__(self, kansio:str) -> None:
+        polku = "animaatio/" + kansio
         self.kuva = None
-        self.kuvat = [pygame.image.load(kansio+"hangman8bg.png"),pygame.image.load(kansio+"hangman9bg.png"),
-                        pygame.image.load(kansio+"hangman10bg.png"),pygame.image.load(kansio+"hangman11bg.png"),
-                        pygame.image.load(kansio+"hangman12bg.png"),pygame.image.load(kansio+"hangman13bg.png"),
-                        pygame.image.load(kansio+"hangman14bg.png"),pygame.image.load(kansio+"hangman15bg.png"),
-                        pygame.image.load(kansio+"hangman16bg.png"),pygame.image.load(kansio+"hangman17bg.png"),
-                        pygame.image.load(kansio+"hangman18bg.png"),pygame.image.load(kansio+"hangman19bg.png"),
-                        pygame.image.load(kansio+"hangman20bg.png"),pygame.image.load(kansio+"hangman21bg.png"),
-                        pygame.image.load(kansio+"hangman22bg.png"),pygame.image.load(kansio+"hangman23bg.png")]
+        tnimet = sorted([os.path.join(polku, kuva) for kuva in os.listdir(polku) if kuva.endswith(".png")])
+        self.kuvat = [pygame.image.load(kuva) for kuva in tnimet]
+        
         self.laskuri = 0
         self.indeksi = 0
         self.nopeus = 10
