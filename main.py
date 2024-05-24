@@ -315,17 +315,19 @@ class Sanalistat:
         self.lue_tiedostot()
 
     def lue_tiedosto(self, tiedostonimi: str, sanojen_pituus: int):
-        with open(tiedostonimi) as tiedosto:
-            for rivi in tiedosto:
-                if rivi.startswith("#"):
-                    continue
-                rivi = rivi.replace("\n","")
-                if sanojen_pituus == 4:
-                    self.__nelja_kirjainta.append(rivi)
-                elif sanojen_pituus == 5:
-                    self.__viisi_kirjainta.append(rivi)
-                elif sanojen_pituus == 6:
-                    self.__kuusi_kirjainta.append(rivi)
+            with open(tiedostonimi) as tiedosto:
+                for rivi in tiedosto:
+                    if rivi.startswith("#"):
+                        continue
+                    if rivi == "":
+                        continue
+                    rivi = rivi.replace("\n","")
+                    if sanojen_pituus == 4:
+                        self.__nelja_kirjainta.append(rivi)
+                    elif sanojen_pituus == 5:
+                        self.__viisi_kirjainta.append(rivi)
+                    elif sanojen_pituus == 6:
+                        self.__kuusi_kirjainta.append(rivi)
 
     def lue_tiedostot(self):
         self.lue_tiedosto("sana_listat/nelja_kirjainta.txt", 4)
