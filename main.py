@@ -17,7 +17,7 @@ fontti3 = pygame.font.Font("creepster.ttf", 20)
 
 # Taustakuvat
 taustakuva_polku = os.path.join("taustat", "tausta3.jpg")
-taustakuva2_polku = os.path.join("taustat", "tausta2.jpg")
+taustakuva2_polku = os.path.join("taustat", "tausta9.jpg")
 taustakuva = pygame.image.load(taustakuva_polku)
 taustakuva2 = pygame.image.load(taustakuva2_polku)
 
@@ -47,7 +47,7 @@ class Pelaaja:
         return self.pisteet
 
     def __str__(self) -> str:
-        return f"Pelaajan {self.nimi} pisteet {self.pisteet}"
+        return f"{self.nimi} pisteet {self.pisteet}"
 
 class Hirsipuu:
     def __init__(self) -> None:
@@ -59,6 +59,8 @@ class Hirsipuu:
         self.__vaarat_kirjaimet = []
         self.pelitilanne = 0
         self.nykyinen_pelaaja = 0
+        self.kierros = 0
+        self.max_kierrokset = 5
 
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
@@ -142,10 +144,11 @@ class Hirsipuu:
             self.piira_vaarat()
             self.piirra_vuoro()
             self.piirra_pisteet()
-            teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (0,0,0))
-            naytto.blit(teksti, (100, korkeus - 200))
+            teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (204,196,188))
+            naytto.blit(teksti, (100, korkeus - 180))
             
             pygame.display.flip()
+            pygame.time.delay(10) 
 
             if "".join(self.arvattava_sana) == self.oikea_vastaus:
                 self.lopetus_ruutu(True)
@@ -156,9 +159,8 @@ class Hirsipuu:
         self.pelaajat.append(self.pelaajat.pop(0))      
 
     def piirra_vuoro(self):
-        vuoro_teksti = fontti.render("Pelaaja: " + self.pelaajat[0].nimi, True, (0, 0, 0))
-        naytto.blit(vuoro_teksti, (leveys // 2 - vuoro_teksti.get_width() // 2, korkeus - 250))
-
+        vuoro_teksti = fontti.render("Pelaaja: " + self.pelaajat[0].nimi, True, (235,117,25))
+        naytto.blit(vuoro_teksti, (leveys // 2 - vuoro_teksti.get_width() // 2, korkeus - 230))
 
     def lopetus_ruutu(self, voitto: bool):
         hangman_kavely = hangmanAnimaatio("kavely")
@@ -176,23 +178,21 @@ class Hirsipuu:
             
             self.tausta2()
             
-            teksti = fontti.render("Peli päättyi!", True, (0,0,0))
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 250))
+            teksti = fontti.render("Peli päättyi!", True, (235,81,25))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 170))
             if voitto:
                 hangman_kavely.paivita_kuva()
                 naytto.blit(hangman_kavely.piirra_kuva(),(leveys //2 - hangman_kavely.leveys() // 2, 50))
-                teksti = fontti.render("Voitit!", True, (0,0,0))
-                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
-                teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (0,0,0))
+                teksti = fontti.render("Voitit!", True, (25,255,90))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 150))
+                teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (25,213,0))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 120))
             else:
                 self.piirra_hirsipuu()
-                teksti = fontti.render("Hävisit!", True, (0,0,0))
-                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
-                teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (0,0,0))
-                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 175))
+                teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (25,213,0))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 120))
             
-            teksti = fontti.render("Enter = Uusi peli ESC = lopeta peli", True, (0,0,0))
+            teksti = fontti.render("Enter = Uusi peli ESC = lopeta peli", True, (235,81,25))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - teksti.get_height() - 20))
 
             pygame.display.flip()
@@ -203,20 +203,21 @@ class Hirsipuu:
         naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 50))
 
     def piira_arvattava_sana(self):
-        arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (0,0,0))
-        naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 175))
+        arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (25, 255, 0))
+        naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 155))
 
     def piira_vaarat(self):
-        teksti = fontti.render("Väärät kirjaimet:", True, (0,0,0))
-        naytto.blit(teksti, (100, korkeus - 100))
+        teksti = fontti.render("Väärät kirjaimet:", True, (204,196,188))
+        naytto.blit(teksti, (100, korkeus - 80))
         vaarat = ",".join(sorted(self.__vaarat_kirjaimet))
-        teksti = fontti.render(vaarat, True, (0,0,0))
-        naytto.blit(teksti, (100, korkeus - 70))
+        teksti = fontti.render(vaarat, True, (255, 0, 0))
+        naytto.blit(teksti, (100, korkeus - 50))
 
     def piirra_pisteet(self):
         for pelaaja in self.pelaajat:   
-            teksti = fontti.render(str(pelaaja), True, (0,0,0))     
+            teksti = fontti3.render(str(pelaaja), True, (235,117,25))     
             naytto.blit(teksti, (10, 10 + 40 * self.pelaajat.index(pelaaja)))
+
 
     def lisaa_pelaaja(self):
         nimi = self.tekstiboxi("Anna pelaajan nimi:")
@@ -255,6 +256,7 @@ class Hirsipuu:
             naytto.blit(syote_alue, (leveys // 2 - syote_alue.get_width() // 2, korkeus // 2))
 
             pygame.display.flip()
+        
         return teksti
            
     def tausta(self):
@@ -288,7 +290,7 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 350 + teksti.get_height()))
 
             pygame.display.flip()
-#            pygame.time.delay(10)
+#           pygame.time.delay(10)
 
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
@@ -320,13 +322,6 @@ class Hirsipuu:
                 self.pelaajat[self.nykyinen_pelaaja].pisteet += 10                      # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
 
         return loytyi
-
-        # AJATUKSENA SIIS ETTÄ PELAAJA SAA OIKEASTA KIRJAIMESTA 3 PISTETTÄ JA JOS ARVAA KOKONAAN OIKEIN NIIN 10 PISTETTÄ
-        # JA JOS ARVAA VÄÄRIN NIIN PISTEITÄ VÄHENNETÄÄN 1 KPL
-        # ENTÄ KUN PELAAJA ARVAA VIIMEISEN/VIIMEISET KIRJAIMET JA SANA TÄYTTYY, SAAKO KOLME VAI 10 PISTETTÄ?
-
-        # MEINASIN MYÖS ETTÄ PELATTAISIIN VAIKKA 5 KIERROSTA JONKA JÄLKEEN SE KENELLÄ ENITEN PISTEITÄ VOITTAA???
-    
 
     def vaarat_kirjaimet(self):
         return list(set(self.__vaarat_kirjaimet)) # Poistetaan mahdolliset duplikaatit ja palautetaan takaisin listana
