@@ -28,7 +28,7 @@ taustakuva2 = pygame.transform.scale(taustakuva2, (leveys, korkeus))
 # Kuvat
 hirsipuu_kuvat = []
 for i in range(1, 8):
-    kuva_polku = os.path.join("hangman_kuvat", f"hangman{i}bg.png") 
+    kuva_polku = os.path.join("hangman_kuvat", f"hangman{i}.png") 
     hirsipuu_kuvat.append(pygame.image.load(kuva_polku))
 
 pygame.display.set_caption("Hirsipuu")
