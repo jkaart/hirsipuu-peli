@@ -200,7 +200,7 @@ class Hirsipuu:
 
     def piirra_hirsipuu(self):
         kuva = hirsipuu_kuvat[self.pelitilanne]
-        naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 50))
+        naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 60))
 
     def piira_arvattava_sana(self):
         arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (25, 255, 0))
