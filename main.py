@@ -59,8 +59,6 @@ class Hirsipuu:
         self.__vaarat_kirjaimet = []
         self.pelitilanne = 0
         self.nykyinen_pelaaja = 0
-        self.kierros = 0
-        self.max_kierrokset = 5
 
     def __str__(self) -> str:
         return " ".join(self.arvattava_sana)
@@ -128,8 +126,9 @@ class Hirsipuu:
                         syote += tapahtuma.unicode
                     elif tapahtuma.key == pygame.K_BACKSPACE:
                         syote = syote[:-1]
-                    
                     elif tapahtuma.key == pygame.K_RETURN:
+                        if syote == "":                         # Jos syötettä ei ole, ei tehdä mitään  
+                            continue
                         if self.arvaus(syote):
                             syote = ""
                         else:
@@ -137,6 +136,8 @@ class Hirsipuu:
                             if self.pelitilanne < len(hirsipuu_kuvat)-1:
                                 self.pelitilanne += 1
                         self.vuoronvaihto() # Vaihdetaan vuoroa
+                    else:
+                        pass    # Jos painetaan jotain muuta kuin kirjaimia, backspacea tai enteriä, ei tehdä mitään
 
             self.tausta2()
             self.piirra_hirsipuu()
@@ -179,21 +180,23 @@ class Hirsipuu:
             self.tausta2()
             
             teksti = fontti.render("Peli päättyi!", True, (235,81,25))
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 170))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 190))
             if voitto:
                 hangman_kavely.paivita_kuva()
                 naytto.blit(hangman_kavely.piirra_kuva(),(leveys //2 - hangman_kavely.leveys() // 2, 50))
                 teksti = fontti.render("Voitit!", True, (25,255,90))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 150))
-                teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (25,213,0))
+                teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (25,255,90))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 120))
             else:
                 self.piirra_hirsipuu()
-                teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (25,213,0))
-                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 120))
+                teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (25,255,90))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 130))
             
-            teksti = fontti.render("Enter = Uusi peli ESC = lopeta peli", True, (235,81,25))
+            teksti = fontti.render("Enter = Uusi peli ESC = lopeta peli", True, (250,203,40))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - teksti.get_height() - 20))
+
+            self.piirra_pisteet()
 
             pygame.display.flip()
             kello.tick(60)
@@ -220,20 +223,27 @@ class Hirsipuu:
 
 
     def lisaa_pelaaja(self):
-        nimi = self.tekstiboxi("Anna pelaajan nimi:")
-        pelaaja = Pelaaja(nimi)
-        self.pelaajat.append(pelaaja)
-
         while True:
-            lisaa_muita = self.tekstiboxi("Lisätäänkö toinen pelaaja? (k/e): ") 
-            if lisaa_muita.lower() == "k":
-                nimi = self.tekstiboxi("Anna pelaajan nimi:")
+            nimi = self.tekstiboxi("Anna pelaajan nimi:")
+            if nimi:                                                                 # Jos nimi on annettu, lisätään pelaaja
                 pelaaja = Pelaaja(nimi)
                 self.pelaajat.append(pelaaja)
-            else:
-                break
+            else:                                                                    # Jos nimeä ei ole annettu, ei tehdä mitään
+                continue
 
-        self.uusi_peli()
+            while True:
+                lisaa_muita = self.tekstiboxi("Lisätäänkö toinen pelaaja? (k/e): ")  # Kysytään halutaanko lisätä muita pelaajia (k/e)   
+                if lisaa_muita.lower() == "k":                                       # Jos vastaus on k, lisätään uusi pelaaja
+                    nimi = self.tekstiboxi("Anna pelaajan nimi:")                    # Kysytään uuden pelaajan nimi
+                    if not nimi:                                                     # Jos nimeä ei ole annettu, ei tehdä mitään
+                        continue
+                    else:  
+                        pelaaja = Pelaaja(nimi)                                      # Jos toinenkin nimi on annettu, lisätään pelaaja
+                        self.pelaajat.append(pelaaja)                                # Lisätään pelaaja listaan
+                elif lisaa_muita.lower() == "e":                                     # Jos vastaus on e, ei lisätä muita pelaajia...
+                    break                                                            # ...ja jatketaan peliin
+                                
+            self.uusi_peli()
 
     # Tekstiboxi johon voi kirjoittaa
     def tekstiboxi(self, viesti: str) -> str:
