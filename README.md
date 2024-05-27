@@ -29,5 +29,8 @@ Debian pohjaisissa jakeluissa (Ubuntu, mint ja yms.)
 ### Suorittaminen
 Komentokehotteessa tai terminaalissa hirsipuu-peli kansiossa ajettuna `python3 main.py` komento käynistää pelin
 
-### Pelin tekijät
+***
 
+### Pelin tekijät
+- Jani "jkaart" Kaartinen
+- Jenna "SanneJ84" Siitonen
