@@ -17,7 +17,7 @@ fontti3 = pygame.font.Font("creepster.ttf", 20)
 
 # Taustakuvat
 taustakuva_polku = os.path.join("taustat", "tausta3.jpg")
-taustakuva2_polku = os.path.join("taustat", "tausta2.jpg")
+taustakuva2_polku = os.path.join("taustat", "tausta9.jpg")
 taustakuva = pygame.image.load(taustakuva_polku)
 taustakuva2 = pygame.image.load(taustakuva2_polku)
 
@@ -28,25 +28,26 @@ taustakuva2 = pygame.transform.scale(taustakuva2, (leveys, korkeus))
 # Kuvat
 hirsipuu_kuvat = []
 for i in range(1, 8):
-    kuva_polku = os.path.join("hangman_kuvat", f"hangman{i}bg.png") 
+    kuva_polku = os.path.join("hangman_kuvat", f"hangman{i}.png") 
     hirsipuu_kuvat.append(pygame.image.load(kuva_polku))
 
 pygame.display.set_caption("Hirsipuu")
 
 kello = pygame.time.Clock()
+
 class Pelaaja:
     def __init__(self, nimi: str) -> None:
         self.nimi = nimi
         self.pisteet = 0
 
     def lisaa_piste(self):
-        self.pisteet += 1
+        self.pisteet += 3
 
     def hae_pisteet(self):
         return self.pisteet
 
     def __str__(self) -> str:
-        return f"Pelaajan {self.nimi} pisteet {self.pisteet}"
+        return f"{self.nimi} pisteet {self.pisteet}"
 
 class Hirsipuu:
     def __init__(self) -> None:
@@ -125,8 +126,9 @@ class Hirsipuu:
                         syote += tapahtuma.unicode
                     elif tapahtuma.key == pygame.K_BACKSPACE:
                         syote = syote[:-1]
-                    
                     elif tapahtuma.key == pygame.K_RETURN:
+                        if syote == "":                         # Jos syötettä ei ole, ei tehdä mitään  
+                            continue
                         if self.arvaus(syote):
                             syote = ""
                         else:
@@ -134,16 +136,20 @@ class Hirsipuu:
                             if self.pelitilanne < len(hirsipuu_kuvat)-1:
                                 self.pelitilanne += 1
                         self.vuoronvaihto() # Vaihdetaan vuoroa
+                    else:
+                        pass    # Jos painetaan jotain muuta kuin kirjaimia, backspacea tai enteriä, ei tehdä mitään
 
             self.tausta2()
             self.piirra_hirsipuu()
             self.piira_arvattava_sana()
             self.piira_vaarat()
             self.piirra_vuoro()
-            teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (0,0,0))
-            naytto.blit(teksti, (100, korkeus - 200))
+            self.piirra_pisteet()
+            teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (204,196,188))
+            naytto.blit(teksti, (100, korkeus - 180))
             
             pygame.display.flip()
+            pygame.time.delay(10) 
 
             if "".join(self.arvattava_sana) == self.oikea_vastaus:
                 self.lopetus_ruutu(True)
@@ -154,9 +160,8 @@ class Hirsipuu:
         self.pelaajat.append(self.pelaajat.pop(0))      
 
     def piirra_vuoro(self):
-        vuoro_teksti = fontti.render("Pelaaja: " + self.pelaajat[0].nimi, True, (0, 0, 0))
-        naytto.blit(vuoro_teksti, (leveys // 2 - vuoro_teksti.get_width() // 2, korkeus - 250))
-
+        vuoro_teksti = fontti.render("Pelaaja: " + self.pelaajat[0].nimi, True, (235,117,25))
+        naytto.blit(vuoro_teksti, (leveys // 2 - vuoro_teksti.get_width() // 2, korkeus - 230))
 
     def lopetus_ruutu(self, voitto: bool):
         hangman_kavely = hangmanAnimaatio("kavely")
@@ -174,58 +179,71 @@ class Hirsipuu:
             
             self.tausta2()
             
-            teksti = fontti.render("Peli päättyi!", True, (0,0,0))
-            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 250))
+            teksti = fontti.render("Peli päättyi!", True, (235,81,25))
+            naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 190))
             if voitto:
                 hangman_kavely.paivita_kuva()
                 naytto.blit(hangman_kavely.piirra_kuva(),(leveys //2 - hangman_kavely.leveys() // 2, 50))
-                teksti = fontti.render("Voitit!", True, (0,0,0))
-                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
-                teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (0,0,0))
+                teksti = fontti.render("Voitit!", True, (25,255,90))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 150))
+                teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (25,255,90))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 120))
             else:
                 self.piirra_hirsipuu()
-                teksti = fontti.render("Hävisit!", True, (0,0,0))
-                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 200))
-                teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (0,0,0))
-                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 175))
+                teksti = fontti.render("Oikea sana oli: " + self.oikea_vastaus, True, (25,255,90))
+                naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 130))
             
-            teksti = fontti.render("Enter = Uusi peli ESC = lopeta peli", True, (0,0,0))
+            teksti = fontti.render("Enter = Uusi peli ESC = lopeta peli", True, (250,203,40))
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - teksti.get_height() - 20))
+
+            self.piirra_pisteet()
 
             pygame.display.flip()
             kello.tick(60)
 
     def piirra_hirsipuu(self):
         kuva = hirsipuu_kuvat[self.pelitilanne]
-        naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 50))
+        naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 60))
 
     def piira_arvattava_sana(self):
-        arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (0,0,0))
-        naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 175))
+        arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (25, 255, 0))
+        naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 155))
 
     def piira_vaarat(self):
-        teksti = fontti.render("Väärät kirjaimet:", True, (0,0,0))
-        naytto.blit(teksti, (100, korkeus - 100))
+        teksti = fontti.render("Väärät kirjaimet:", True, (204,196,188))
+        naytto.blit(teksti, (100, korkeus - 80))
         vaarat = ",".join(sorted(self.__vaarat_kirjaimet))
-        teksti = fontti.render(vaarat, True, (0,0,0))
-        naytto.blit(teksti, (100, korkeus - 70))
+        teksti = fontti.render(vaarat, True, (255, 0, 0))
+        naytto.blit(teksti, (100, korkeus - 50))
+
+    def piirra_pisteet(self):
+        for pelaaja in self.pelaajat:   
+            teksti = fontti3.render(str(pelaaja), True, (235,117,25))     
+            naytto.blit(teksti, (10, 10 + 40 * self.pelaajat.index(pelaaja)))
+
 
     def lisaa_pelaaja(self):
-        nimi = self.tekstiboxi("Anna pelaajan nimi:")
-        pelaaja = Pelaaja(nimi)
-        self.pelaajat.append(pelaaja)
-
         while True:
-            lisaa_muita = self.tekstiboxi("Lisätäänkö toinen pelaaja? (k/e): ") 
-            if lisaa_muita.lower() == "k":
-                nimi = self.tekstiboxi("Anna pelaajan nimi:")
+            nimi = self.tekstiboxi("Anna pelaajan nimi:")
+            if nimi:                                                                 # Jos nimi on annettu, lisätään pelaaja
                 pelaaja = Pelaaja(nimi)
                 self.pelaajat.append(pelaaja)
-            else:
-                break
+            else:                                                                    # Jos nimeä ei ole annettu, ei tehdä mitään
+                continue
 
-        self.uusi_peli()
+            while True:
+                lisaa_muita = self.tekstiboxi("Lisätäänkö toinen pelaaja? (k/e): ")  # Kysytään halutaanko lisätä muita pelaajia (k/e)   
+                if lisaa_muita.lower() == "k":                                       # Jos vastaus on k, lisätään uusi pelaaja
+                    nimi = self.tekstiboxi("Anna pelaajan nimi:")                    # Kysytään uuden pelaajan nimi
+                    if not nimi:                                                     # Jos nimeä ei ole annettu, ei tehdä mitään
+                        continue
+                    else:  
+                        pelaaja = Pelaaja(nimi)                                      # Jos toinenkin nimi on annettu, lisätään pelaaja
+                        self.pelaajat.append(pelaaja)                                # Lisätään pelaaja listaan
+                elif lisaa_muita.lower() == "e":                                     # Jos vastaus on e, ei lisätä muita pelaajia...
+                    break                                                            # ...ja jatketaan peliin
+                                
+            self.uusi_peli()
 
     # Tekstiboxi johon voi kirjoittaa
     def tekstiboxi(self, viesti: str) -> str:
@@ -248,6 +266,7 @@ class Hirsipuu:
             naytto.blit(syote_alue, (leveys // 2 - syote_alue.get_width() // 2, korkeus // 2))
 
             pygame.display.flip()
+        
         return teksti
            
     def tausta(self):
@@ -281,26 +300,36 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 350 + teksti.get_height()))
 
             pygame.display.flip()
-#            pygame.time.delay(10)
+#           pygame.time.delay(10)
 
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
 
     def arvaus(self, syote: str):
         loytyi = False
-        if len(syote) == 1: # Jos annetaan yksi kirjain
-            for i in range(len(self.oikea_vastaus)):
-                if syote == self.arvattava_sana[i]:
-                    continue
-                if syote == self.oikea_vastaus[i]:
-                    self.arvattava_sana[i] = syote
+        if len(syote) == 1:                                                             # Jos annetaan yksi kirjain
+            for i in range(len(self.oikea_vastaus)):                                    # Käydään läpi oikea vastaus
+                if syote == self.arvattava_sana[i]:                                     # Jos syöte on jo arvattu
+                    continue                                                            # Jatketaan seuraavaan
+                if syote == self.oikea_vastaus[i]:                                      # Jos syöte on oikea kirjain
+                    self.arvattava_sana[i] = syote                                      # Lisätään kirjain arvattavaan sanaan
                     loytyi = True
-            if not loytyi:
-                if syote not in self.__vaarat_kirjaimet:
-                    self.__vaarat_kirjaimet.append(syote)
-        elif syote == self.oikea_vastaus: # Jos annettu enemmän kuin yksi kirjain ja vastaus on oikein
-            self.arvattava_sana = syote
-            loytyi = True
+            if not loytyi:                                                              # Jos syöte ei ole oikea kirjain
+                if syote not in self.__vaarat_kirjaimet:                                # ja jos syöte ei ole jo väärissä kirjaimissa
+                    self.__vaarat_kirjaimet.append(syote)                               # Lisätään syöte väärin arvattuihin
+                    if self.pelaajat[self.nykyinen_pelaaja].pisteet > 0:                # Jos pelaajalla on pisteitä...
+                        self.pelaajat[self.nykyinen_pelaaja].pisteet -= 1               # voidaan vähentää pelaajan pisteitä vääristä arvauksista
+            if loytyi:
+                self.pelaajat[self.nykyinen_pelaaja].lisaa_piste()                      # Lisätään pelaajalle pisteitä 3 kpl jos vastaus on oikein
+        elif syote == self.oikea_vastaus: 
+            self.arvattava_sana = syote                                                 # Jos syöte on oikea sana  
+            loytyi = True   
+            self.pelaajat[self.nykyinen_pelaaja].pisteet += 10                          # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
+        else:
+            if syote == self.oikea_vastaus and len(syote) == len(self.oikea_vastaus):   # Jos syöte on oikea sana ja pituus on sama kuin oikea sana 
+                self.arvattava_sana = syote                                            
+                loytyi = True
+                self.pelaajat[self.nykyinen_pelaaja].pisteet += 10                      # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
 
         return loytyi
 
