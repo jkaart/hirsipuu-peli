@@ -37,14 +37,29 @@ kello = pygame.time.Clock()
 
 class Pelaaja:
     def __init__(self, nimi: str) -> None:
-        self.nimi = nimi
-        self.pisteet = 0
+        self.__nimi = nimi
+        self.__pisteet = 0
 
-    def lisaa_piste(self):
-        self.pisteet += 3
+    @property
+    def nimi(self):
+        return self.__nimi
+    
+    @property
+    def pisteet(self):
+        return self.__pisteet
+    
+    @property
+    def nollaa_pisteet(self):
+        self.__pisteet = 0
+    
+    def lisaa_pisteita(self, pisteet: int):
+        self.__pisteet += pisteet
 
-    def hae_pisteet(self):
-        return self.pisteet
+    def vahenna_pisteita(self, pisteet: int):
+        if self.__pisteet - pisteet > 0:
+            self.__pisteet -= pisteet
+        else:
+            self.__pisteet = 0
 
     def __str__(self) -> str:
         return f"{self.nimi} pisteet {self.pisteet}"
@@ -183,7 +198,7 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 190))
             if voitto:
                 hangman_kavely.paivita_kuva()
-                naytto.blit(hangman_kavely.piirra_kuva(),(leveys //2 - hangman_kavely.leveys() // 2, 50))
+                naytto.blit(hangman_kavely.piirra_kuva,(leveys //2 - hangman_kavely.leveys // 2, 50))
                 teksti = fontti.render("Voitit!", True, (25,255,90))
                 naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, korkeus - 150))
                 teksti = fontti.render("Arvasit sanan joka oli: " + self.oikea_vastaus, True, (25,255,90))
@@ -317,19 +332,13 @@ class Hirsipuu:
             if not loytyi:                                                              # Jos syöte ei ole oikea kirjain
                 if syote not in self.__vaarat_kirjaimet:                                # ja jos syöte ei ole jo väärissä kirjaimissa
                     self.__vaarat_kirjaimet.append(syote)                               # Lisätään syöte väärin arvattuihin
-                    if self.pelaajat[self.nykyinen_pelaaja].pisteet > 0:                # Jos pelaajalla on pisteitä...
-                        self.pelaajat[self.nykyinen_pelaaja].pisteet -= 1               # voidaan vähentää pelaajan pisteitä vääristä arvauksista
+                    self.pelaajat[self.nykyinen_pelaaja].vahenna_pisteita(1)             # Vähennetään pelaajalta 1 piste
             if loytyi:
-                self.pelaajat[self.nykyinen_pelaaja].lisaa_piste()                      # Lisätään pelaajalle pisteitä 3 kpl jos vastaus on oikein
-        elif syote == self.oikea_vastaus: 
+                self.pelaajat[self.nykyinen_pelaaja].lisaa_pisteita(3)                  # Lisätään pelaajalle pisteitä 3 kpl jos vastaus on oikein
+        elif syote == self.oikea_vastaus and len(syote) == len(self.oikea_vastaus): 
             self.arvattava_sana = syote                                                 # Jos syöte on oikea sana  
             loytyi = True   
-            self.pelaajat[self.nykyinen_pelaaja].pisteet += 10                          # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
-        else:
-            if syote == self.oikea_vastaus and len(syote) == len(self.oikea_vastaus):   # Jos syöte on oikea sana ja pituus on sama kuin oikea sana 
-                self.arvattava_sana = syote                                            
-                loytyi = True
-                self.pelaajat[self.nykyinen_pelaaja].pisteet += 10                      # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
+            self.pelaajat[self.nykyinen_pelaaja].lisaa_pisteita(10)                     # Lisätään pelaajalle pisteitä 10 kpl jos vastaus on oikein
 
         return loytyi
 
@@ -377,33 +386,48 @@ class Sanalistat:
 
 class hangmanAnimaatio:
     def __init__(self, kansio:str) -> None:
+        self.__kuva = None
+
         polku = "animaatio/" + kansio
-        self.kuva = None
         tnimet = sorted([os.path.join(polku, kuva) for kuva in os.listdir(polku) if kuva.endswith(".png")])
-        self.kuvat = [pygame.image.load(kuva) for kuva in tnimet]
+        self.__kuvat = [pygame.image.load(kuva) for kuva in tnimet]
         
-        self.laskuri = 0
-        self.indeksi = 0
-        self.nopeus = 10
+        self.__laskuri = 0
+        self.__indeksi = 0
+        self.__nopeus = 10
 
-    def paivita_kuva(self):
-            self.laskuri += 1
-            if self.indeksi == len(self.kuvat):
-                    # self.indeksi = 0 # jos halutaan looppaamaan
-                    return
-            self.kuva = self.kuvat[self.indeksi]
-            if self.laskuri > self.nopeus:
-                    self.indeksi += 1
-                    self.laskuri = 0
+    @property
+    def nopeus(self):
+        return self.__nopeus
+    
+    @nopeus.setter
+    def nopeus(self, nopeus: int):
+            self.__nopeus = nopeus
 
+    def paivita_kuva(self, loop: bool = False):
+            self.__laskuri += 1
+            if self.__indeksi == len(self.__kuvat):
+                    if loop:
+                        self.__indeksi = 0 # jos halutaan looppaamaan
+                    else:
+                        return
+            self.__kuva = self.__kuvat[self.__indeksi]
+
+            if self.__laskuri > self.__nopeus: # Kasvatetaan indeksiä yhellä ja nollataan laskuri, kun on kulunut nopeuden verran frameja
+                    self.__indeksi += 1
+                    self.__laskuri = 0
+
+    @property
     def piirra_kuva(self):
-          return self.kuva
+          return self.__kuva
     
+    @property
     def leveys(self):
-        return self.kuva.get_width()
+        return self.__kuva.get_width()
     
+    @property
     def korkeus(self):
-        return self.kuva.get_height()
+        return self.__kuva.get_height()
 
 if __name__ == "__main__":
     hirsipuu = Hirsipuu()
