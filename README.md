@@ -33,13 +33,11 @@ Komentokehotteessa tai terminaalissa hirsipuu-peli kansiossa ajettuna `python3 m
 
 ### Kreditit
 #### Kuvat
-- Aloitusikkunan tausta `tausta3.jpg`: RowanWyattArt
+- Aloitusikkunan tausta `tausta.jpg`: RowanWyattArt
 - Muut taustat ja hangman kuvat: Jenna Siitonen
 
 #### Sanalistat
 - Nykysuomen sanalista. Kotimaisten kielten keskus. Päivitetty 30.4.2024 [viitattu 20.05.2024]. Saatavissa https://kaino.kotus.fi/lataa/nykysuomensanalista2024.csv
-
-#### Fontit
 
 ***
 
