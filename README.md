@@ -32,5 +32,5 @@ Komentokehotteessa tai terminaalissa hirsipuu-peli kansiossa ajettuna `python3 m
 ***
 
 ### Pelin tekijät
-- Jani "jkaart" Kaartinen
-- Jenna "SanneJ84" Siitonen
+- Jani "[jkaart](https://github.com/jkaart)" Kaartinen
+- Jenna "[SanneJ84](https://github.com/SanneJ84)" Siitonen
