@@ -34,15 +34,22 @@ nelja_kirjainta = set(nelja_kirjainta)
 viisi_kirjainta = set(viisi_kirjainta)
 kuusi_kirjainta = set(kuusi_kirjainta)
 
+print("Nykysuomensanalista luettu")
+
 with open("nelja_kirjainta.txt", "w", encoding="utf-8") as tiedosto:
     for sana in nelja_kirjainta:
         tiedosto.write(sana+"\n")
+
+print("Tiedosto nelja_kirjainta.txt luotu")
 
 with open("viisi_kirjainta.txt", "w", encoding="utf-8") as tiedosto:
     for sana in viisi_kirjainta:
         tiedosto.write(sana+"\n")
 
+print("Tiedosto viisi_kirjainta.txt luotu")
+
 with open("kuusi_kirjainta.txt", "w", encoding="utf-8") as tiedosto:
     for sana in kuusi_kirjainta:
         tiedosto.write(sana+"\n")
 
+print("Tiedosto kuusi_kirjainta.txt luotu")
