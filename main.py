@@ -156,8 +156,8 @@ class Hirsipuu:
 
             self.tausta2()
             self.piirra_hirsipuu()
-            self.piira_arvattava_sana()
-            self.piira_vaarat()
+            self.piirra_arvattava_sana()
+            self.piirra_vaarat()
             self.piirra_vuoro()
             self.piirra_pisteet()
             teksti = fontti.render("Arvattava sana tai kirjain (Enter hyväksyy): " + syote, True, (204,196,188))
@@ -220,11 +220,11 @@ class Hirsipuu:
         kuva = hirsipuu_kuvat[self.pelitilanne]
         naytto.blit(kuva,(leveys //2 - kuva.get_width() // 2, 60))
 
-    def piira_arvattava_sana(self):
+    def piirra_arvattava_sana(self):
         arvattava_sana = fontti2.render(" ".join(self.arvattava_sana), True, (25, 255, 0))
         naytto.blit(arvattava_sana, (leveys // 2 - arvattava_sana.get_width() // 2, korkeus - 155))
 
-    def piira_vaarat(self):
+    def piirra_vaarat(self):
         teksti = fontti.render("Väärät kirjaimet:", True, (204,196,188))
         naytto.blit(teksti, (100, korkeus - 80))
         vaarat = ",".join(sorted(self.__vaarat_kirjaimet))
@@ -235,7 +235,6 @@ class Hirsipuu:
         for pelaaja in self.pelaajat:   
             teksti = fontti3.render(str(pelaaja), True, (235,117,25))     
             naytto.blit(teksti, (10, 10 + 40 * self.pelaajat.index(pelaaja)))
-
 
     def lisaa_pelaaja(self):
         while True:
