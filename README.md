@@ -31,6 +31,18 @@ Komentokehotteessa tai terminaalissa hirsipuu-peli kansiossa ajettuna `python3 m
 
 ***
 
+### Kreditit
+#### Kuvat
+- Aloitusikkunan tausta `tausta3.jpg`: RowanWyattArt
+- Muut taustat ja hangman kuvat: Jenna Siitonen
+
+#### Sanalistat
+- Nykysuomen sanalista. Kotimaisten kielten keskus. Päivitetty 30.4.2024 [viitattu 20.05.2024]. Saatavissa https://kaino.kotus.fi/lataa/nykysuomensanalista2024.csv
+
+#### Fontit
+
+***
+
 ### Pelin tekijät
 - Jani "[jkaart](https://github.com/jkaart)" Kaartinen
 - Jenna "[SanneJ84](https://github.com/SanneJ84)" Siitonen
