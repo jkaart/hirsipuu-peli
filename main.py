@@ -179,7 +179,7 @@ class Hirsipuu:
         naytto.blit(vuoro_teksti, (leveys // 2 - vuoro_teksti.get_width() // 2, korkeus - 230))
 
     def lopetus_ruutu(self, voitto: bool):
-        hangman_kavely = hangmanAnimaatio("kavely")
+        hangman_kavely = HangmanAnimaatio("kavely")
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
@@ -383,7 +383,7 @@ class Sanalistat:
     def kuusi_kirjainta(self):
         return self.__kuusi_kirjainta
 
-class hangmanAnimaatio:
+class HangmanAnimaatio:
     def __init__(self, kansio:str) -> None:
         self.__kuva = None
 
