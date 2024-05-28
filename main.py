@@ -11,9 +11,9 @@ korkeus = 600
 naytto = pygame.display.set_mode((leveys, korkeus))
 
 # Fontit
-fontti = pygame.font.Font("creepster.ttf", 30)
-fontti2 = pygame.font.Font("creepster.ttf", 70)
-fontti3 = pygame.font.Font("creepster.ttf", 20)
+fontti = pygame.font.Font("fontit/creepster/creepster.ttf", 30)
+fontti2 = pygame.font.Font("fontit/creepster/creepster.ttf", 70)
+fontti3 = pygame.font.Font("fontit/creepster/creepster.ttf", 20)
 
 # Taustakuvat
 taustakuva_polku = os.path.join("taustat", "tausta.jpg")
