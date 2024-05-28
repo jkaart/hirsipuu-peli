@@ -16,8 +16,8 @@ fontti2 = pygame.font.Font("creepster.ttf", 70)
 fontti3 = pygame.font.Font("creepster.ttf", 20)
 
 # Taustakuvat
-taustakuva_polku = os.path.join("taustat", "tausta3.jpg")
-taustakuva2_polku = os.path.join("taustat", "tausta9.jpg")
+taustakuva_polku = os.path.join("taustat", "tausta.jpg")
+taustakuva2_polku = os.path.join("taustat", "tausta2.jpg")
 taustakuva = pygame.image.load(taustakuva_polku)
 taustakuva2 = pygame.image.load(taustakuva2_polku)
 
