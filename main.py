@@ -96,10 +96,10 @@ class Hirsipuu:
             self.tausta2()
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                        pygame.quit()
+                        exit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_ESCAPE:
-                        pygame.quit()
+                        exit()
                     if tapahtuma.key == pygame.K_1:
                         self.helppo()
                     if tapahtuma.key == pygame.K_2:
@@ -135,7 +135,7 @@ class Hirsipuu:
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                    pygame.quit()
+                    exit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.unicode in "abcdefghijklmnopqrstuvwxyzåäö":
                         syote += tapahtuma.unicode
@@ -183,14 +183,14 @@ class Hirsipuu:
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                    pygame.quit()
+                    exit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_RETURN:
                         self.__vaarat_kirjaimet = []
                         self.pelitilanne = 0
                         self.uusi_peli()
                     if tapahtuma.key == pygame.K_ESCAPE:
-                        pygame.quit()
+                        exit()
             
             self.tausta2()
             
@@ -266,7 +266,7 @@ class Hirsipuu:
         while aktiivinen:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                    pygame.quit()
+                    exit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_RETURN:
                         aktiivinen = False
@@ -295,13 +295,12 @@ class Hirsipuu:
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
+                        exit()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_RETURN:
                         self.lisaa_pelaaja()
                     if tapahtuma.key == pygame.K_ESCAPE:
-                        pygame.quit()
+                        exit()
             
             self.tausta()
 
