@@ -33,7 +33,7 @@ Komentokehotteessa tai terminaalissa hirsipuu-peli kansiossa ajettuna `python3 m
 
 ### Kreditit
 #### Kuvat
-- Aloitusikkunan tausta `tausta.jpg`: RowanWyattArt
+- Aloitusikkunan tausta `tausta1.jpg`: RowanWyattArt
 - Muut taustat ja hangman kuvat: Jenna Siitonen
 
 #### Sanalistat
