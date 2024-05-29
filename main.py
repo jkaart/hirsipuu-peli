@@ -91,15 +91,19 @@ class Hirsipuu:
         self.oikea_vastaus = self.uusi_sana()
         self.arvattava_sana = list("_" * len(self.oikea_vastaus))
 
+    def sulje(self):
+        pygame.quit()
+        sys.exit()
+
     def uusi_peli(self):
         while True:
             self.tausta2()
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                        exit()
+                        self.sulje()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_ESCAPE:
-                        exit()
+                        self.sulje()
                     if tapahtuma.key == pygame.K_1:
                         self.helppo()
                     if tapahtuma.key == pygame.K_2:
@@ -135,7 +139,7 @@ class Hirsipuu:
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                    exit()
+                    self.sulje()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.unicode in "abcdefghijklmnopqrstuvwxyzåäö":
                         syote += tapahtuma.unicode
@@ -183,14 +187,14 @@ class Hirsipuu:
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                    exit()
+                    self.sulje()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_RETURN:
                         self.__vaarat_kirjaimet = []
                         self.pelitilanne = 0
                         self.uusi_peli()
                     if tapahtuma.key == pygame.K_ESCAPE:
-                        exit()
+                        self.sulje()
             
             self.tausta2()
             
@@ -266,7 +270,7 @@ class Hirsipuu:
         while aktiivinen:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                    exit()
+                    self.sulje()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_RETURN:
                         aktiivinen = False
@@ -295,12 +299,12 @@ class Hirsipuu:
         while True:
             for tapahtuma in pygame.event.get():
                 if tapahtuma.type == pygame.QUIT:
-                        exit()
+                        self.sulje()
                 if tapahtuma.type == pygame.KEYDOWN:
                     if tapahtuma.key == pygame.K_RETURN:
                         self.lisaa_pelaaja()
                     if tapahtuma.key == pygame.K_ESCAPE:
-                        exit()
+                        self.sulje()
             
             self.tausta()
 
@@ -313,7 +317,6 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 350 + teksti.get_height()))
 
             pygame.display.flip()
-#           pygame.time.delay(10)
 
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
