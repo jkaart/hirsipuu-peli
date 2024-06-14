@@ -34,6 +34,7 @@ for i in range(1, 8):
 pygame.display.set_caption("Hirsipuu")
 
 kello = pygame.time.Clock()
+fps = 15
 
 class Pelaaja:
     def __init__(self, nimi: str) -> None:
@@ -122,6 +123,7 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 300))
 
             pygame.display.flip()
+            kello.tick(fps)
         
     def helppo(self):
         self.peliruutu(0)
@@ -168,7 +170,7 @@ class Hirsipuu:
             naytto.blit(teksti, (100, korkeus - 180))
             
             pygame.display.flip()
-            pygame.time.delay(10) 
+            kello.tick(fps)
 
             if "".join(self.arvattava_sana) == self.oikea_vastaus:
                 self.lopetus_ruutu(True)
@@ -284,6 +286,7 @@ class Hirsipuu:
             naytto.blit(syote_alue, (leveys // 2 - syote_alue.get_width() // 2, korkeus // 2))
 
             pygame.display.flip()
+            kello.tick(fps)
         
         return teksti
            
@@ -317,6 +320,7 @@ class Hirsipuu:
             naytto.blit(teksti, (leveys // 2 - teksti.get_width() // 2, 350 + teksti.get_height()))
 
             pygame.display.flip()
+            kello.tick(fps)
 
     def uusi_sana(self):
         return random.choice(self.kaytettavat_sanat)
